@@ -12,5 +12,10 @@
             "homepage": "https://www.vrkansagara.in/"
         }
     ],
-    "require": {}
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Vrkansagara\\Http\\Middleware": "src/"
+        }
+    }
 }
