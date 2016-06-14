@@ -1,0 +1,12 @@
+{
+    "name": "vrkansagara/lara-out-press",
+    "description": "This is simply compress your final out of Larvel Application and serve to the browser.",
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Vallabh Kansagara",
+            "email": "vrkansagara@gmail.com"
+        }
+    ],
+    "require": {}
+}
