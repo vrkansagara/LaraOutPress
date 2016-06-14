@@ -15,7 +15,7 @@
     "require": {},
     "autoload": {
         "psr-4": {
-            "Vrkansagara\\Http\\Middleware": "src/"
+            "Vrkansagara\\Http\\Middleware\\": "src/"
         }
     }
 }
