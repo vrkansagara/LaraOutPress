@@ -4,6 +4,8 @@ This is simply compress your final out of Larvel Application and serve to the br
 ### How to activate this compression middleware in your application
 
 Update your `app/Http/Kernel.php` file with below line
+
+
 ~~php
 protected $middleware = [
 		...
@@ -11,6 +13,7 @@ protected $middleware = [
     	...
     ];
 ~~
+
 
 ### TO Do List
 - [x] Compress browser output.
