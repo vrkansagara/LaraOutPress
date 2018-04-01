@@ -19,5 +19,8 @@
         "psr-4": {
             "Vrkansagara\\": "src/"
         }
-    }
+    },
+     "support": {
+         "email": "vrkansagara@gmail.com"
+     }
 }
