@@ -15,6 +15,11 @@ protected $middleware = [
 ~~~
 
 
+### Display usage on each page.
+
+Set `$debug = 1;` in `AfterMiddleware.php`
+
+
 ### TO Do List
 
 - [x] Compress browser output.
@@ -22,7 +27,13 @@ protected $middleware = [
 - [] Combile all JavaScript files.
 - [] Compress using varis algorithms.
 - [] Versioning the compress file.
+- [] Excempt route(s),middleware,group,prefix
 
 ### Task
 
 - [] Add analytics before compress and after compress.
+
+### Code Assumption
+This code is developed with the mind set of each request if filtered by this middleware. So most of the code will not be flexi.
+
+Improvement and suggestion are alwayse welcome. 
