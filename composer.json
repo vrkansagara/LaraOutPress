@@ -2,14 +2,14 @@
     "name": "vrkansagara/lara-out-press",
     "description": "This is simply compress your final out of Larvel Application and serve to the browser.",
     "keywords": ["laravel", "compress"],
-    "homepage": "https://www.vrkansagara.in/",
+    "homepage": "https://vrkansagara.in/",
     "type": "library",
     "license": "BSD-3-Clause",
     "authors": [
         {
             "name": "Vallabh Kansagara",
             "email": "vrkansagara@gmail.com",
-            "homepage": "https://www.vrkansagara.in/"
+            "homepage": "https://vrkansagara.in/"
         }
     ],
     "require": {
