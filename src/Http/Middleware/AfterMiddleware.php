@@ -3,7 +3,7 @@
  * @copyright  Copyright (c) 2015-2016 Vallabh Kansagara <vrkansagara@gmail.com>
  * @license    https://opensource.org/licenses/BSD-3-Clause New BSD License
  */
-namespace Vrkansagara\Http\Middleware;
+namespace App\Http\Middleware;
 
 use Closure;
 
@@ -11,7 +11,7 @@ class AfterMiddleware {
 
   public $bufferOldSize;
   public $bufferNewSize;
-  public $debug = 0;
+  public $debug = 1;
 
   /**
    * Handle an incoming request.
@@ -26,9 +26,11 @@ class AfterMiddleware {
     $buffer              = $response->getContent();
     $this->bufferOldSize = strlen($buffer);
     $whiteSpaceRules     = array(
-//            '/\>[^\S ]+/s' => '>',// Strip all whitespaces after tags, except space
-//            '/[^\S ]+\</s' => '<',// strip whitespaces before tags, except space
-            '/(\s)+/s'          => '\\1',// shorten multiple whitespace sequences
+            '/(\s)+/s'     => '\\1',// shorten multiple whitespace sequences
+            "#>\s+<#"      => ">\n<",  // Strip excess whitespace using new line
+            "#\n\s+<#"     => "\n<",    // strip excess whitespace using new line
+            '/\>[^\S ]+/s' => '>',// Strip all whitespaces after tags, except space
+            '/[^\S ]+\</s' => '<',// strip whitespaces before tags, except space
       /**
        * '/\s+     # Match one or more whitespace characters
        * (?!       # but only if it is impossible to match...
@@ -37,7 +39,7 @@ class AfterMiddleware {
        * )         # End of lookahead
        * /x',
        */
-            '/\s+(?![^<>]*>)/x' => '', //Remove all whitespaces except content between html tags.
+//            '/\s+(?![^<>]*>)/x' => '', //Remove all whitespaces except content between html tags. //MOST DANGEROUS
     );
     $commentRules        = array(
             "/<!--.*?-->/ms" => '',// Remove all html comment.,
@@ -46,13 +48,12 @@ class AfterMiddleware {
       //OldWord will be replaced by the NewWord
 //              '/\bOldWord\b/i' =>'NewWord' // OldWord <-> NewWord DO NOT REMOVE THIS LINE. {REFERENCE LINE}
     );
-    $mergeCss            = array();
     $allRules            = array_merge(
-            $mergeCss,
             $replaceWords,
             $commentRules,
             $whiteSpaceRules
     );
+    $buffer              = $this->compressJscript($buffer);
     $buffer              = preg_replace(array_keys($allRules), array_values($allRules), $buffer);
     $this->bufferNewSize = strlen($buffer);
     if ($this->debug) {
@@ -69,8 +70,8 @@ EOF;
     }
     $response->setContent($buffer);
     ini_set('pcre.recursion_limit', '16777');
-    ini_set('zlib.output_compression', 'On'); // If you like to enable GZip, too!
-
+    ini_set('zlib.output_compression', 4096); // Some browser cant get content type.
+    ini_set('zlib.output_compression_level', -1); // Let server decide.
     return $response;
   }
 
@@ -121,10 +122,55 @@ EOF;
     return $new_buffer;
   }
 
-  function formatSizeUnits($size){
-    $base = log($size) / log(1024);
+  public function formatSizeUnits($size) {
+    $base   = log($size) / log(1024);
     $suffix = array('', 'KB', 'MB', 'GB', 'TB');
     $f_base = floor($base);
-    return round(pow(1024, $base - floor($base)), 2) . $suffix[$f_base];
+
+    return round(pow(1024, $base - floor($base)), 2).$suffix[$f_base];
   }
+
+  public function compressJscript($buffer) {
+    // JavaScript compressor by John Elliot <jj5@jj5.net>
+    $replace = array(
+            '#\'([^\n\']*?)/\*([^\n\']*)\'#' => "'\1/'+\'\'+'*\2'", // remove comments from ' strings
+            '#\"([^\n\"]*?)/\*([^\n\"]*)\"#' => '"\1/"+\'\'+"*\2"', // remove comments from " strings
+            '#/\*.*?\*/#s'                   => "",      // strip C style comments
+            '#[\r\n]+#'                      => "\n",    // remove blank lines and \r's
+            '#\n([ \t]*//.*?\n)*#s'          => "\n",    // strip line comments (whole line only)
+            '#([^\\])//([^\'"\n]*)\n#s'      => "\\1\n",
+      // strip line comments
+      // (that aren't possibly in strings or regex's)
+            '#\n\s+#'                        => "\n",    // strip excess whitespace
+            '#\s+\n#'                        => "\n",    // strip excess whitespace
+            '#(//[^\n]*\n)#s'                => "\\1\n", // extra line feed after any comments left
+      // (important given later replacements)
+            '#/([\'"])\+\'\'\+([\'"])\*#'    => "/*" // restore comments in strings
+    );
+    $script  = preg_replace(array_keys($replace), $replace, $buffer);
+    $replace = array(
+            "&&\n" => "&&",
+            "||\n" => "||",
+            "(\n"  => "(",
+            ")\n"  => ")",
+            "[\n"  => "[",
+            "]\n"  => "]",
+            "+\n"  => "+",
+            ",\n"  => ",",
+            "?\n"  => "?",
+            ":\n"  => ":",
+            ";\n"  => ";",
+            "{\n"  => "{",
+//  "}\n"  => "}", (because I forget to put semicolons after function assignments)
+            "\n]"  => "]",
+            "\n)"  => ")",
+            "\n}"  => "}",
+            "\n\n" => "\n",
+    );
+    $script = str_replace(array_keys($replace), $replace, $script);
+
+    return trim($script);
+
+  }
+
 }
