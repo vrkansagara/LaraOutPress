@@ -22,3 +22,7 @@ protected $middleware = [
 - [] Combile all JavaScript files.
 - [] Compress using varis algorithms.
 - [] Versioning the compress file.
+
+### Task
+
+- [] Add analytics before compress and after compress.

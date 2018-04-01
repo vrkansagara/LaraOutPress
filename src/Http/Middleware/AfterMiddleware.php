@@ -21,45 +21,49 @@ class AfterMiddleware
     {
         $response = $next($request);
         $buffer = $response->getContent();
-        if (strpos($buffer, '<pre>') !== false) {
-            $replace = array(
-                '/<!--[^\[](.*?)[^\]]-->/s' => '',
-                "/<\?php/" => '<?php ',
-                "/\r/" => '',
-                "/>\n</" => '><',
-                "/>\s+\n</" => '><',
-                "/>\n\s+</" => '><'
-            );
-        } else {
-            $replace = array(
-                '/<!--[^\[](.*?)[^\]]-->/s' => '',
-                "/<\?php/" => '<?php ',
-                "/\n([\S])/" => '$1',
-                "/\r/" => '',
-                "/\n/" => '',
-                "/\t/" => '',
-                "/ +/" => ' '
-            );
-        }
-        
-        // Remove htmlcomment;
-        $additionaly = array(
-            // strip whitespaces after tags, except space
-            '/\>[^\S ]+/s' => '>',
-            // strip whitespaces before tags, except space
-            '/[^\S ]+\</s' => '<',
-            // shorten multiple whitespace sequences
-            '/(\s)+/s' => '\\1',
-            // Remove htmlcomment
-            '!/\*.*?\*/!s' => '',
-            '/\n\s*\n/' => ''
-        );
-        
-        // $buffer = preg_replace(array_keys($replace), array_values($replace), $buffer);
-        $buffer = preg_replace(array_keys($additionaly), array_values($additionaly), $buffer);
-        $buffer = $buffer = $this->compress($buffer);
-        $response->setContent($buffer);
-        ini_set("pcre.recursion_limit", "16777");
+//        $buffer = $this->compress($buffer);
+//        $buffer = $this->sanitize_output($buffer);
+
+
+
+      $whiteSpaceRules = array(
+//            '/\>[^\S ]+/s' => '>',// Strip all whitespaces after tags, except space
+//            '/[^\S ]+\</s' => '<',// strip whitespaces before tags, except space
+            '/(\s)+/s' => '\\1',// shorten multiple whitespace sequences
+        /**
+        '/\s+     # Match one or more whitespace characters
+        (?!       # but only if it is impossible to match...
+        [^<>]*   # any characters except angle brackets
+        >        # followed by a closing bracket.
+        )         # End of lookahead
+        /x',
+         */
+              '/\s+(?![^<>]*>)/x' => '', //Remove all whitespaces except content between html tags.
+      );
+
+      $commentRules = array(
+              "/<!--.*?-->/ms" =>'',// Remove all html comment.
+      );
+//              $buffer = preg_replace(array_keys($additionaly), array_values($additionaly), $buffer);
+
+      $exmptTags = array();
+      $replaceHtmlTags = array();
+      $replaceWords = array(
+//              '/\bWord\b/i' =>'vk-laravel' //DO NOT REMOVE THIS LINE. {REFERENCE LINE}
+      );
+
+
+
+      $allRules = array_merge(
+              $replaceWords,
+              $exmptTags,
+              $replaceHtmlTags
+//              $commentRules,
+//              $whiteSpaceRules
+      );
+      $buffer = preg_replace(array_keys($allRules), array_values($allRules), $buffer);
+      $response->setContent($buffer);
+        ini_set('pcre.recursion_limit', '16777');
         ini_set('zlib.output_compression', 'On'); // If you like to enable GZip, too!
         return $response;
     }
