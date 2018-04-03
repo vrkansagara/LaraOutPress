@@ -5,7 +5,11 @@ This is simply compress your final out of Larvel Application and serve to the br
 
 Update your `app/Http/Kernel.php` file with below line
 
+### How to install
 
+~~~bash
+	composer require vrkansagara/lara-out-press
+~~~
 ~~~php
 protected $middleware = [
 		...
