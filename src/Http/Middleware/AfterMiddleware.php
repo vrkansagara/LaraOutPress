@@ -11,7 +11,7 @@ class AfterMiddleware {
 
   public $bufferOldSize;
   public $bufferNewSize;
-  public $debug = 1;
+  public $debug = 0;
 
   /**
    * Handle an incoming request.
