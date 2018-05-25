@@ -36,6 +36,9 @@ class AfterMiddleware
             )
         );
         $appEnvironment    = getenv('APP_ENV');
+        $targetEnvironment = is_string($targetEnvironment) ? explode(
+            ',', $targetEnvironment
+        ) : $targetEnvironment;
         if ( ! in_array($appEnvironment, $targetEnvironment)) {
             return $next($request);
         }
