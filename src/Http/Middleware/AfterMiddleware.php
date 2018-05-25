@@ -25,20 +25,10 @@ class AfterMiddleware
      */
     public function handle($request, Closure $next)
     {
-        $targetEnvironment = getenv(
-            'VRKANSAGARA_COMPRESS_ENVIRONMENT',
-            array(
-                'prod',
-                'production',
-                'stag',
-                'staging',
-                'testing',
-            )
+        $targetEnvironment = explode(
+            ',', getenv('VRKANSAGARA_COMPRESS_ENVIRONMENT')
         );
         $appEnvironment    = getenv('APP_ENV');
-        $targetEnvironment = is_string($targetEnvironment) ? explode(
-            ',', $targetEnvironment
-        ) : $targetEnvironment;
         if ( ! in_array($appEnvironment, $targetEnvironment)) {
             return $next($request);
         }
