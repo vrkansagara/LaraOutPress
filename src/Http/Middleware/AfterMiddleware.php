@@ -4,7 +4,7 @@
  * @license    https://opensource.org/licenses/BSD-3-Clause New BSD License
  */
 
-namespace Vrkansagara\Http\Middleware;
+namespace App\Http\Middleware;
 
 use Closure;
 
@@ -13,7 +13,7 @@ class AfterMiddleware
 
     public $bufferOldSize;
     public $bufferNewSize;
-    public $debug = 0;
+    public $debug = 1;
 
     /**
      * Handle an incoming request.
