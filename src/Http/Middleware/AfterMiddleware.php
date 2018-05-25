@@ -25,6 +25,20 @@ class AfterMiddleware
      */
     public function handle($request, Closure $next)
     {
+        $targetEnvironment = getenv(
+            'VRKANSAGARA_COMPRESS_ENVIRONMENT',
+            array(
+                'prod',
+                'production',
+                'stag',
+                'staging',
+                'testing',
+            )
+        );
+        $appEnvironment    = getenv('APP_ENV');
+        if ( ! in_array($appEnvironment, $targetEnvironment)) {
+            return $next($request);
+        }
         $response            = $next($request);
         $buffer              = $response->getContent();
         $this->bufferOldSize = strlen($buffer);
