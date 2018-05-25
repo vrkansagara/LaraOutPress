@@ -1,10 +1,15 @@
 # LaraOutPress (Laravel Output Press)
 This is simply compress your final out of Larvel Application and serve to the browser.
 
+### How to install
+
+~~~bash
+	composer require vrkansagara/lara-out-press
+~~~
+
 ### How to activate this compression middleware in your application
 
 Update your `app/Http/Kernel.php` file with below line
-
 
 ~~~php
 protected $middleware = [
