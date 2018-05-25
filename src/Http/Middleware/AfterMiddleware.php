@@ -4,7 +4,7 @@
  * @license    https://opensource.org/licenses/BSD-3-Clause New BSD License
  */
 
-namespace App\Http\Middleware;
+namespace Vrkansagara\Http\Middleware;
 
 use Closure;
 
