@@ -19,6 +19,10 @@ protected $middleware = [
     ];
 ~~~
 
+Add your target environment into `.env`
+~~~bash
+    VRKANSAGARA_COMPRESS_ENVIRONMENT='prod,testing,dev'
+~~~
 
 ### Display usage on each page.
 
