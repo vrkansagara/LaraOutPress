@@ -13,7 +13,7 @@ class AfterMiddleware
 
     public $bufferOldSize;
     public $bufferNewSize;
-    public $debug = 1;
+    public $debug = 0;
 
     /**
      * Handle an incoming request.
@@ -25,6 +25,12 @@ class AfterMiddleware
      */
     public function handle($request, Closure $next)
     {
+
+        $isDebug = isset(getenv('VRKANSAGARA_COMPRESS_DEBUG'))
+            && ! empty(getenv('VRKANSAGARA_COMPRESS_DEBUG'))
+        getenv('VRKANSAGARA_COMPRESS_DEBUG')
+        : 0;
+
         $targetEnvironment = explode(
             ',', getenv('VRKANSAGARA_COMPRESS_ENVIRONMENT')
         );
