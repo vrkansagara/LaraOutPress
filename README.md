@@ -21,8 +21,15 @@ protected $middleware = [
 
 Add your target environment into `.env`
 ~~~bash
-    VRKANSAGARA_COMPRESS_ENVIRONMENT='prod,testing,dev'
+    VRKANSAGARA_COMPRESS_ENVIRONMENT='prod,testing,dev,local'
 ~~~
+
+
+If you want to see how much you compress on each page, set bellow line in `.env`
+~~~bash
+    VRKANSAGARA_COMPRESS_DEBUG=0
+~~~
+
 
 ### Display usage on each page.
 
