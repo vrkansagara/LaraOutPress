@@ -13,7 +13,7 @@ Update your `app/Http/Kernel.php` file with below line
 
 ~~~php
 protected $middleware = [
-		...
+	...
         \Vrkansagara\Http\Middleware\AfterMiddleware::class,
     	...
     ];
@@ -47,9 +47,9 @@ Set `$debug = 1;` in `AfterMiddleware.php`
 
 ### Task
 
-- [] Add analytics before compress and after compress.
+- [x] Add analytics before compress and after compress.
 
 ### Code Assumption
-This code is developed with the mind set of each request if filtered by this middleware. So most of the code will not be flexi.
+This code is developed with the mind set of each request is filtered by this middleware. So most of the code will not be flexi.
 
 Improvement and suggestion are alwayse welcome. 
