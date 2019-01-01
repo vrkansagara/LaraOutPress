@@ -13,27 +13,32 @@ Update your `app/Http/Kernel.php` file with below line
 
 ~~~php
 protected $middleware = [
-	...
-        \Vrkansagara\Http\Middleware\AfterMiddleware::class,
-    	...
+    ...
+    \Vrkansagara\Http\Middleware\AfterMiddleware::class,
+    ...
     ];
 ~~~
 
 Add your target environment into `.env`
 ~~~bash
     VRKANSAGARA_COMPRESS_ENVIRONMENT='prod,testing,dev,local'
+    
+            OR
+            
+    VRKANSAGARA_COMPRESS_ENVIRONMENT='${APP_ENV}'
 ~~~
 
 
 If you want to see how much you compress on each page, set bellow line in `.env`
+
 ~~~bash
-    VRKANSAGARA_COMPRESS_DEBUG=0
+    VRKANSAGARA_COMPRESS_DEBUG = 0
 ~~~
 
 
 ### Display usage on each page.
 
-Set `$debug = 1;` in `AfterMiddleware.php`
+Set ` $debug = 1; ` in ` AfterMiddleware.php `
 
 
 ### TO Do List
