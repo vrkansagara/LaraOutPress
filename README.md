@@ -16,7 +16,7 @@ protected $middleware = [
     ...
     \Vrkansagara\Http\Middleware\AfterMiddleware::class,
     ...
-    ];
+];
 ~~~
 
 Add your target environment into `.env`
