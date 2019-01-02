@@ -72,7 +72,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     }
 
     /**
-     * Register the Debugbar Middleware
+     * Register the LaraOutPress Middleware
      *
      * @param  string $middleware
      */

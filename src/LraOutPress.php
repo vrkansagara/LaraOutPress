@@ -55,7 +55,7 @@ class LaraOutPress
     }
 
     /**
-     * Check if the Debugbar is enabled
+     * Check if the LaraOutPress is enabled
      * @return boolean
      */
     public function isEnabled()
