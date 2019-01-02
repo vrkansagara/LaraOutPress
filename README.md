@@ -9,17 +9,20 @@ This is simply compress your final out of Larvel Application and serve to the br
 
 ### How to activate this compression middleware in your application
 
-Update your `app/Http/Kernel.php` file with below line
+Add the ServiceProvider to the providers array in `config/app.php`
 
-~~~php
-protected $middleware = [
-    ...
-    \Vrkansagara\Http\Middleware\AfterMiddleware::class,
-    ...
-    ];
-~~~
+```php
+ Vrkansagara\LaraOutPress\ServiceProvider::class,
+```
+
+Copy the package config to your local config with the publish command:
+
+```shell
+php artisan vendor:publish --provider="Vrkansagara\LaraOutPress\ServiceProvider"
+```
 
 Add your target environment into `.env`
+
 ~~~bash
     VRKANSAGARA_COMPRESS_ENVIRONMENT='prod,testing,dev,local'
     
@@ -29,17 +32,16 @@ Add your target environment into `.env`
 ~~~
 
 
-If you want to see how much you compress on each page, set bellow line in `.env`
+Enable this compressor  by placing bellow code in `.env` file.
 
 ~~~bash
-    VRKANSAGARA_COMPRESS_DEBUG = 0
+    VRKANSAGARA_COMPRESS_ENABLED = true
 ~~~
 
 
 ### Display usage on each page.
 
 Set ` $debug = 1; ` in ` AfterMiddleware.php `
-
 
 ### TO Do List
 
@@ -53,23 +55,9 @@ Set ` $debug = 1; ` in ` AfterMiddleware.php `
 ### Task
 
 - [x] Add analytics before compress and after compress.
+- [x] Migrate code to laravel package format. 
 
 ### Code Assumption
 This code is developed with the mind set of each request is filtered by this middleware. So most of the code will not be flexi.
 
-Improvement and suggestion are always welcome. 
-
-
-### Laravel 5.5+:
-
-If you don't use auto-discovery, add the ServiceProvider to the providers array in config/app.php
-
-```php
- Vrkansagara\LaraOutPress\ServiceProvider::class,
-```
-
-Copy the package config to your local config with the publish command:
-
-```shell
-php artisan vendor:publish --provider="Vrkansagara\LaraOutPress\ServiceProvider"
-```
+Improvement and suggestion are always welcome.
