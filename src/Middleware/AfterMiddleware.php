@@ -1,12 +1,15 @@
 <?php
+
+namespace Vrkansagara\LaraOutPress\Middleware;
+
 /**
- * @copyright  Copyright (c) 2015-2016 Vallabh Kansagara <vrkansagara@gmail.com>
+ * @copyright  Copyright (c) 2015-2019 Vallabh Kansagara <vrkansagara@gmail.com>
  * @license    https://opensource.org/licenses/BSD-3-Clause New BSD License
  */
 
-namespace Vrkansagara\Http\Middleware;
 
 use Closure;
+use Vrkansagara\LaraOutPress\LaraOutPress;
 
 class AfterMiddleware
 {
@@ -15,16 +18,38 @@ class AfterMiddleware
     public $bufferNewSize;
     public $debug = 0;
 
+
+    /**
+     * @var LaraOutPress
+     */
+    protected $laraOutPress;
+
+    /**
+     * Create a new middleware instance.
+     * AfterMiddleware constructor.
+     *
+     * @param LaraOutPress $laraOutPress
+     */
+    public function __construct(LaraOutPress $laraOutPress)
+    {
+        $this->laraOutPress = $laraOutPress;
+    }
+
+
     /**
      * Handle an incoming request.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \Closure                 $next
+     * @param \Closure $next
      *
      * @return mixed
      */
     public function handle($request, Closure $next)
     {
+        if (!$this->laraOutPress->isEnabled()) {
+            return $next($request);
+        }
+
 
         $isDebug = null !== getenv('VRKANSAGARA_COMPRESS_DEBUG')
             ? getenv('VRKANSAGARA_COMPRESS_DEBUG')
@@ -35,17 +60,17 @@ class AfterMiddleware
         $targetEnvironment = explode(
             ',', getenv('VRKANSAGARA_COMPRESS_ENVIRONMENT')
         );
-        $appEnvironment    = getenv('APP_ENV');
-        if ( ! in_array($appEnvironment, $targetEnvironment)) {
+        $appEnvironment = getenv('APP_ENV');
+        if (!in_array($appEnvironment, $targetEnvironment)) {
             return $next($request);
         }
-        $response            = $next($request);
-        $buffer              = $response->getContent();
+        $response = $next($request);
+        $buffer = $response->getContent();
         $this->bufferOldSize = strlen($buffer);
-        $whiteSpaceRules     = array(
-            '/(\s)+/s'     => '\\1',// shorten multiple whitespace sequences
-            "#>\s+<#"      => ">\n<",  // Strip excess whitespace using new line
-            "#\n\s+<#"     => "\n<",// strip excess whitespace using new line
+        $whiteSpaceRules = array(
+            '/(\s)+/s' => '\\1',// shorten multiple whitespace sequences
+            "#>\s+<#" => ">\n<",  // Strip excess whitespace using new line
+            "#\n\s+<#" => "\n<",// strip excess whitespace using new line
             '/\>[^\S ]+/s' => '>',
             // Strip all whitespaces after tags, except space
             '/[^\S ]+\</s' => '<',// strip whitespaces before tags, except space
@@ -59,31 +84,31 @@ class AfterMiddleware
              */
             //            '/\s+(?![^<>]*>)/x' => '', //Remove all whitespaces except content between html tags. //MOST DANGEROUS
         );
-        $commentRules        = array(
+        $commentRules = array(
             "/<!--.*?-->/ms" => '',// Remove all html comment.,
         );
-        $replaceWords        = array(
+        $replaceWords = array(
             //OldWord will be replaced by the NewWord
             //              '/\bOldWord\b/i' =>'NewWord' // OldWord <-> NewWord DO NOT REMOVE THIS LINE. {REFERENCE LINE}
         );
-        $allRules            = array_merge(
+        $allRules = array_merge(
             $replaceWords,
             $commentRules,
             $whiteSpaceRules
         );
-        $buffer              = $this->compressJscript($buffer);
-        $buffer              = preg_replace(
+        $buffer = $this->compressJscript($buffer);
+        $buffer = preg_replace(
             array_keys($allRules), array_values($allRules), $buffer
         );
         $this->bufferNewSize = strlen($buffer);
         if ($this->debug) {
-            $old     = $this->formatSizeUnits($this->bufferOldSize);
-            $new     = $this->formatSizeUnits($this->bufferNewSize);
+            $old = $this->formatSizeUnits($this->bufferOldSize);
+            $new = $this->formatSizeUnits($this->bufferNewSize);
             $percent = round(
                 ($this->bufferNewSize / $this->bufferOldSize) * 100, 2
             );
             $buffer
-                     .= <<< EOF
+                .= <<< EOF
 <span>
 Before : $old<br>
 After  : $new <br>
@@ -140,7 +165,7 @@ EOF;
          * %ix
          */
         $regexRemoveWhiteSpace
-                    = '%(?>[^\S ]\s*| \s{2,})(?=(?:(?:[^<]++| <(?!/?(?:textarea|pre)\b))*+)(?:<(?>textarea|pre)\b|\z))%ix';
+            = '%(?>[^\S ]\s*| \s{2,})(?=(?:(?:[^<]++| <(?!/?(?:textarea|pre)\b))*+)(?:<(?>textarea|pre)\b|\z))%ix';
         $new_buffer = preg_replace($regexRemoveWhiteSpace, '', $buffer);
         // We are going to check if processing has working
         if ($new_buffer === null) {
@@ -152,7 +177,7 @@ EOF;
 
     public function formatSizeUnits($size)
     {
-        $base   = log($size) / log(1024);
+        $base = log($size) / log(1024);
         $suffix = array('', 'KB', 'MB', 'GB', 'TB');
         $f_base = floor($base);
 
@@ -167,43 +192,43 @@ EOF;
             // remove comments from ' strings
             '#\"([^\n\"]*?)/\*([^\n\"]*)\"#' => '"\1/"+\'\'+"*\2"',
             // remove comments from " strings
-            '#/\*.*?\*/#s'                   => "",// strip C style comments
-            '#[\r\n]+#'                      => "\n",
+            '#/\*.*?\*/#s' => "",// strip C style comments
+            '#[\r\n]+#' => "\n",
             // remove blank lines and \r's
-            '#\n([ \t]*//.*?\n)*#s'          => "\n",
+            '#\n([ \t]*//.*?\n)*#s' => "\n",
             // strip line comments (whole line only)
-            '#([^\\])//([^\'"\n]*)\n#s'      => "\\1\n",
+            '#([^\\])//([^\'"\n]*)\n#s' => "\\1\n",
             // strip line comments
             // (that aren't possibly in strings or regex's)
-            '#\n\s+#'                        => "\n",// strip excess whitespace
-            '#\s+\n#'                        => "\n",// strip excess whitespace
-            '#(//[^\n]*\n)#s'                => "\\1\n",
+            '#\n\s+#' => "\n",// strip excess whitespace
+            '#\s+\n#' => "\n",// strip excess whitespace
+            '#(//[^\n]*\n)#s' => "\\1\n",
             // extra line feed after any comments left
             // (important given later replacements)
-            '#/([\'"])\+\'\'\+([\'"])\*#'    => "/*"
+            '#/([\'"])\+\'\'\+([\'"])\*#' => "/*"
             // restore comments in strings
         );
-        $script  = preg_replace(array_keys($replace), $replace, $buffer);
+        $script = preg_replace(array_keys($replace), $replace, $buffer);
         $replace = array(
             "&&\n" => "&&",
             "||\n" => "||",
-            "(\n"  => "(",
-            ")\n"  => ")",
-            "[\n"  => "[",
-            "]\n"  => "]",
-            "+\n"  => "+",
-            ",\n"  => ",",
-            "?\n"  => "?",
-            ":\n"  => ":",
-            ";\n"  => ";",
-            "{\n"  => "{",
+            "(\n" => "(",
+            ")\n" => ")",
+            "[\n" => "[",
+            "]\n" => "]",
+            "+\n" => "+",
+            ",\n" => ",",
+            "?\n" => "?",
+            ":\n" => ":",
+            ";\n" => ";",
+            "{\n" => "{",
             //  "}\n"  => "}", (because I forget to put semicolons after function assignments)
-            "\n]"  => "]",
-            "\n)"  => ")",
-            "\n}"  => "}",
+            "\n]" => "]",
+            "\n)" => ")",
+            "\n}" => "}",
             "\n\n" => "\n",
         );
-        $script  = str_replace(array_keys($replace), $replace, $script);
+        $script = str_replace(array_keys($replace), $replace, $script);
 
         return trim($script);
 

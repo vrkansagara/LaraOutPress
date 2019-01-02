@@ -58,3 +58,18 @@ Set ` $debug = 1; ` in ` AfterMiddleware.php `
 This code is developed with the mind set of each request is filtered by this middleware. So most of the code will not be flexi.
 
 Improvement and suggestion are always welcome. 
+
+
+### Laravel 5.5+:
+
+If you don't use auto-discovery, add the ServiceProvider to the providers array in config/app.php
+
+```php
+ Vrkansagara\LaraOutPress\ServiceProvider::class,
+```
+
+Copy the package config to your local config with the publish command:
+
+```shell
+php artisan vendor:publish --provider="Vrkansagara\LaraOutPress\ServiceProvider"
+```

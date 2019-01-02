@@ -20,10 +20,29 @@
   },
   "autoload": {
     "psr-4": {
-      "Vrkansagara\\": "src/"
-    }
+      "Vrkansagara\\LaraOutPress\\": "src/"
+    },
+    "files": [
+      "src/helper.php"
+    ]
   },
   "support": {
-    "email": "vrkansagara@gmail.com"
+    "email": "vrkansagara@gmail.com",
+    "issues": "https://github.com/vrkansagara/LaraOutPress/issues",
+    "source": "https://github.com/vrkansagara/LaraOutPress"
+  },
+  "prefer-stable": true,
+  "extra": {
+    "laravel": {
+      "branch-alias": {
+        "dev-master": "develop"
+      },
+      "providers": [
+        "Vrkansagara\\LaraOutPress\\ServiceProvider"
+      ],
+      "aliases": {
+        "LaraOutPress": "Vrkansagara\\LaraOutPress\\Facade"
+      }
+    }
   }
 }
