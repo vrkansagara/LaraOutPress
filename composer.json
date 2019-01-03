@@ -31,6 +31,7 @@
     "issues": "https://github.com/vrkansagara/LaraOutPress/issues",
     "source": "https://github.com/vrkansagara/LaraOutPress"
   },
+  "minimum-stability": "dev",
   "prefer-stable": true,
   "extra": {
     "laravel": {
@@ -44,6 +45,12 @@
         "LaraOutPress": "Vrkansagara\\LaraOutPress\\Facade"
       }
     }
+  },
+  "require": {
+    "php": ">=7.0"
+  },
+  "require-dev": {
+    "laravel/framework": "5.5.x"
   },
   "scripts": {
     "post-autoload-dump": [
