@@ -21,14 +21,16 @@ Copy the package config to your local config with the publish command:
 php artisan vendor:publish --provider="Vrkansagara\LaraOutPress\ServiceProvider"
 ```
 
-Add your target environment into `.env`
+Enable on single environment `.env`
 
 ~~~bash
-    VRKANSAGARA_COMPRESS_ENVIRONMENT='prod,testing,dev,local'
-    
-            OR
-            
-    VRKANSAGARA_COMPRESS_ENVIRONMENT='${APP_ENV}'
+      VRKANSAGARA_COMPRESS_ENVIRONMENT='${APP_ENV}' 
+~~~
+
+Enable on multiple environment `.env`
+
+~~~bash
+      VRKANSAGARA_COMPRESS_ENVIRONMENT='prod,testing,dev,local' 
 ~~~
 
 
@@ -37,7 +39,6 @@ Enable this compressor  by placing bellow code in `.env` file.
 ~~~bash
     VRKANSAGARA_COMPRESS_ENABLED = true
 ~~~
-
 
 ### Display usage on each page.
 

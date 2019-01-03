@@ -26,19 +26,49 @@ class LaraOutPress
     protected $version;
 
     /**
-     * True when this is a Lumen application
-     *
-     * @var bool
-     */
-    protected $is_lumen = false;
-
-    /**
      * True when enabled, false disabled an null for still unknown
      *
      * @var bool
      */
-    protected $enabled = null;
+    protected $enabled;
 
+
+    /**
+     * @var null
+     */
+    protected $config;
+
+    /**
+     * @return string
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * @param string $version
+     */
+    public function setVersion($version)
+    {
+        $this->version = $version;
+    }
+
+    /**
+     * @return \Illuminate\Foundation\Application
+     */
+    public function getApp()
+    {
+        return $this->app;
+    }
+
+    /**
+     * @param \Illuminate\Foundation\Application $app
+     */
+    public function setApp($app)
+    {
+        $this->app = $app;
+    }
 
 
     /**
@@ -49,21 +79,46 @@ class LaraOutPress
         if (!$app) {
             $app = app();   //Fallback when $app is not given
         }
-        $this->app = $app;
-        $this->version = $app->version();
-        $this->is_lumen = str_contains($this->version, 'Lumen');
+        $this->setApp($app);
+        $this->setConfig();
+        $this->setEnabled();
+        $this->setVersion($app->version());
     }
 
     /**
-     * Check if the LaraOutPress is enabled
-     * @return boolean
+     * @return null
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
+    /**
+     * @param null $config
+     */
+    public function setConfig()
+    {
+        $applicationConfig = $this->app['config'];
+        $this->config = $applicationConfig->get('laraoutpress');
+    }
+
+    /**
+     * @return bool
      */
     public function isEnabled()
     {
+        return $this->enabled;
+    }
+
+    /**
+     * @return bool
+     */
+    public function setEnabled()
+    {
         if ($this->enabled === null) {
-            $config = $this->app['config'];
-            $configEnabled = value($config->get('laraoutpress.enabled'));
-            $this->enabled = ( $configEnabled && !$this->app->runningInConsole() ) ? $configEnabled : false;
+            $config = $this->config;
+            $configEnabled = value($config['enabled']);
+            $this->enabled = ($configEnabled && !$this->app->runningInConsole()) ? $configEnabled : false;
         }
         return $this->enabled;
     }

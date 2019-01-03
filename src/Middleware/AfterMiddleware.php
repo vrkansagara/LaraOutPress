@@ -15,8 +15,8 @@ class AfterMiddleware
 {
 
     public $bufferOldSize;
+
     public $bufferNewSize;
-    public $debug = 0;
 
 
     /**
@@ -49,24 +49,24 @@ class AfterMiddleware
         if (!$this->laraOutPress->isEnabled()) {
             return $next($request);
         }
+        $config = $this->laraOutPress->getConfig();
+        $isDebug = $config['debug'];
+        $targetEnvironment = explode(',', $config['target_environment']);
+        $appEnvironment = getenv('APP_ENV');
 
+        $response = $next($request);
 
-        $isDebug = null !== getenv('VRKANSAGARA_COMPRESS_DEBUG')
-            ? getenv('VRKANSAGARA_COMPRESS_DEBUG')
-            : 0;
+        $buffer = $response->getContent();
+
         if ($isDebug) {
             $this->debug = 1;
+            $this->bufferOldSize = strlen($buffer);
         }
-        $targetEnvironment = explode(
-            ',', getenv('VRKANSAGARA_COMPRESS_ENVIRONMENT')
-        );
-        $appEnvironment = getenv('APP_ENV');
+
         if (!in_array($appEnvironment, $targetEnvironment)) {
             return $next($request);
         }
-        $response = $next($request);
-        $buffer = $response->getContent();
-        $this->bufferOldSize = strlen($buffer);
+
         $whiteSpaceRules = array(
             '/(\s)+/s' => '\\1',// shorten multiple whitespace sequences
             "#>\s+<#" => ">\n<",  // Strip excess whitespace using new line
@@ -101,7 +101,8 @@ class AfterMiddleware
             array_keys($allRules), array_values($allRules), $buffer
         );
         $this->bufferNewSize = strlen($buffer);
-        if ($this->debug) {
+
+        if ($isDebug) {
             $old = $this->formatSizeUnits($this->bufferOldSize);
             $new = $this->formatSizeUnits($this->bufferNewSize);
             $percent = round(
