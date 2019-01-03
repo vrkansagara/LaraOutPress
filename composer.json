@@ -44,5 +44,10 @@
         "LaraOutPress": "Vrkansagara\\LaraOutPress\\Facade"
       }
     }
+  },
+  "scripts": {
+    "post-autoload-dump": [
+      "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+    ]
   }
 }
