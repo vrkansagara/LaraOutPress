@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Vrkansagara\LaraOutPress;
 
 /**
@@ -38,7 +39,12 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         $configPath = __DIR__ . '/../config/laraoutpress.php';
         $this->publishes([$configPath => $this->getConfigPath()], 'config');
-        $this->registerMiddleware(AfterMiddleware::class);
+        $config = config('laraoutpress');
+        if (class_exists($config['middleware_class'])) {
+            $this->registerMiddleware($config['middleware_class']);
+        } else {
+            $this->registerMiddleware(AfterMiddleware::class);
+        }
     }
 
     /**

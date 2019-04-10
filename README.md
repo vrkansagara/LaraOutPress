@@ -47,6 +47,8 @@ Set ` $debug = 1; ` in ` AfterMiddleware.php `
 ### TO Do List
 
 - [x] Compress browser output.
+- [x] Add middleware key in configuration.
+- [x] Remove `env()` function usage in run time.
 - [] Combine all CSS
 - [] Combine all JavaScript files.
 - [] Compress using varis algorithms.

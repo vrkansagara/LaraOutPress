@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 return [
     /*
    |--------------------------------------------------------------------------
@@ -13,6 +13,14 @@ return [
 
     'debug' => env('VRKANSAGARA_COMPRESS_DEBUG', false),
 
-    'target_environment' => env('VRKANSAGARA_COMPRESS_ENVIRONMENT', '')
+    'target_environment' => env('VRKANSAGARA_COMPRESS_ENVIRONMENT', ''),
 
+    'middleware_class' => \Vrkansagara\LaraOutPress\Middleware\AfterMiddleware::class,
+
+    'allowed_methods' => [
+        'GET'
+    ],
+    'allowed_locales' => [
+        'en'
+    ]
 ];

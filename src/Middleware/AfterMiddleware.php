@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types = 1);
 namespace Vrkansagara\LaraOutPress\Middleware;
 
 /**
@@ -46,13 +45,30 @@ class AfterMiddleware
      */
     public function handle($request, Closure $next)
     {
+        // Check weather library is enable or not.
         if (!$this->laraOutPress->isEnabled()) {
             return $next($request);
         }
+        // Get library configuration
         $config = $this->laraOutPress->getConfig();
         $isDebug = $config['debug'];
         $targetEnvironment = explode(',', $config['target_environment']);
-        $appEnvironment = getenv('APP_ENV');
+        $app = app();
+        $appEnvironment = $app->environment();
+
+        // Check weather current http method fall into allowed list.
+        $currentMethod = $request->getMethod();
+        $allowedHttpMethods = $config['allowed_methods'];
+        if (!in_array($currentMethod, $allowedHttpMethods)) {
+            return $next($request);
+        }
+
+        // Check weather current locales fall into allowed list.
+        $currentLocale = $request->getLocale();
+        $allowedLocale = $config['allowed_locales'];
+        if (!in_array($currentLocale, $allowedLocale)) {
+            return $next($request);
+        }
 
         $response = $next($request);
 
@@ -119,10 +135,8 @@ EOF;
         }
         $response->setContent($buffer);
         ini_set('pcre.recursion_limit', '16777');
-        ini_set(
-            'zlib.output_compression', 4096
-        ); // Some browser cant get content type.
-        ini_set('zlib.output_compression_level', -1); // Let server decide.
+        ini_set('zlib.output_compression', '4096'); // Some browser cant get content type.
+        ini_set('zlib.output_compression_level', '-1'); // Let server decide.
 
         return $response;
     }

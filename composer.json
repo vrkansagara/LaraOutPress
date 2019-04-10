@@ -1,11 +1,11 @@
 {
   "name": "vrkansagara/lara-out-press",
-  "description": "This is simply compress your final out of Larvel Application and serve to the browser.",
+  "description": "This is simply compress your final out of Laravel Application and serve to the browser.",
   "keywords": [
     "laravel",
     "compress"
   ],
-  "homepage": "https://vrkansagara.in/",
+  "homepage": "https://vrkansagara.in",
   "type": "library",
   "license": "BSD-3-Clause",
   "authors": [
