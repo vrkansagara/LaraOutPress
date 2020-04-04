@@ -36,7 +36,7 @@
   "extra": {
     "laravel": {
       "branch-alias": {
-        "dev-master": "develop"
+        "master-dev": "develop"
       },
       "providers": [
         "Vrkansagara\\LaraOutPress\\ServiceProvider"
