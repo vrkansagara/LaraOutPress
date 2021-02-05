@@ -35,9 +35,6 @@
   "prefer-stable": true,
   "extra": {
     "laravel": {
-      "branch-alias": {
-        "master-dev": "develop"
-      },
       "providers": [
         "Vrkansagara\\LaraOutPress\\ServiceProvider"
       ],
