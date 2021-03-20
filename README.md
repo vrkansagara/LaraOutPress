@@ -4,7 +4,7 @@ This is simply compress your final out of Larvel Application and serve to the br
 ### How to install
 
 ~~~bash
-	composer require vrkansagara/lara-out-press
+composer require vrkansagara/lara-out-press
 ~~~
 
 ### How to activate this compression middleware in your application
@@ -24,20 +24,20 @@ php artisan vendor:publish --provider="Vrkansagara\LaraOutPress\ServiceProvider"
 Enable on single environment `.env`
 
 ~~~bash
-      VRKANSAGARA_COMPRESS_ENVIRONMENT='${APP_ENV}' 
+VRKANSAGARA_COMPRESS_ENVIRONMENT="${APP_ENV}" 
 ~~~
 
 Enable on multiple environment `.env`
 
 ~~~bash
-      VRKANSAGARA_COMPRESS_ENVIRONMENT='prod,testing,dev,local' 
+VRKANSAGARA_COMPRESS_ENVIRONMENT='prod,testing,dev,local' 
 ~~~
 
 
 Enable this compressor  by placing bellow code in `.env` file.
 
 ~~~bash
-    VRKANSAGARA_COMPRESS_ENABLED = true
+VRKANSAGARA_COMPRESS_ENABLED = true
 ~~~
 
 ### Display usage on each page.
