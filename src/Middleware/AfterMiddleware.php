@@ -3,7 +3,7 @@
 namespace Vrkansagara\LaraOutPress\Middleware;
 
 /**
- * @copyright  Copyright (c) 2015-2019 Vallabh Kansagara <vrkansagara@gmail.com>
+ * @copyright  Copyright (c) 2015-2021 Vallabh Kansagara <vrkansagara@gmail.com>
  * @license    https://opensource.org/licenses/BSD-3-Clause New BSD License
  */
 
@@ -118,7 +118,9 @@ Reduce : $percent%<br>
 EOF;
         }
         $response->setContent($buffer);
+
         ini_set('pcre.recursion_limit', '16777');
+
         ini_set(
             'zlib.output_compression', 4096
         ); // Some browser cant get content type.

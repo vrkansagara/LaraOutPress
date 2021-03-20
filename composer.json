@@ -20,11 +20,8 @@
   },
   "autoload": {
     "psr-4": {
-      "Vrkansagara\\LaraOutPress\\": "src/"
-    },
-    "files": [
-      "src/helper.php"
-    ]
+      "LaraOutPress\\": "src/"
+    }
   },
   "support": {
     "email": "vrkansagara@gmail.com",
