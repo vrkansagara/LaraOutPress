@@ -16,7 +16,7 @@
     }
   ],
   "require": {
-    "php": ">=7.0"
+    "php": ">=7.0|^8.0"
   },
   "autoload": {
     "psr-4": {
@@ -41,7 +41,7 @@
     }
   },
   "require-dev": {
-    "laravel/framework": "5.5.x"
+    "laravel/framework": "5.5.x || 8.0.x"
   },
   "scripts": {
     "post-autoload-dump": [

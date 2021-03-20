@@ -24,7 +24,7 @@ php artisan vendor:publish --provider="Vrkansagara\LaraOutPress\ServiceProvider"
 Enable on single environment `.env`
 
 ~~~bash
-VRKANSAGARA_COMPRESS_ENVIRONMENT='${APP_ENV}' 
+VRKANSAGARA_COMPRESS_ENVIRONMENT="${APP_ENV}" 
 ~~~
 
 Enable on multiple environment `.env`
