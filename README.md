@@ -1,13 +1,14 @@
-# LaraOutPress (Laravel Output Press)
+# LaraOutPress (Laravel Output Pres)
+
   This is simply compress your final out of Larvel Application and serve to the browser.
 
-### How to install
+## How to install ?
 
 ~~~bash
 composer require vrkansagara/lara-out-press
 ~~~
 
-### How to activate this compression middleware in your application
+## How to activate this compression middleware in your application ?
 
 Add the ServiceProvider to the providers array in `config/app.php`
 
@@ -15,7 +16,7 @@ Add the ServiceProvider to the providers array in `config/app.php`
 Vrkansagara\LaraOutPress\ServiceProvider::class,
 ~~~
 
-Copy the package config to your local config with the publish command:
+Copy the package configuration to your local config directory using the publish command:
 
 ~~~bash
 php artisan vendor:publish --provider="Vrkansagara\LaraOutPress\ServiceProvider"
@@ -25,7 +26,7 @@ Enable on single environment `.env`
 
 ~~~bash
 VRKANSAGARA_COMPRESS_ENVIRONMENT="${APP_ENV}" 
-~~
+~~~
 
 Enable on multiple environment `.env`
 
@@ -33,14 +34,13 @@ Enable on multiple environment `.env`
 VRKANSAGARA_COMPRESS_ENVIRONMENT='prod,testing,dev,local' 
 ~~~
 
-
 Enable this compressor  by placing bellow code in `.env` file.
 
 ~~~bash
 VRKANSAGARA_COMPRESS_ENABLED=true
 ~~~
 
-### Display usage on each page.
+### Display usage on each page
 
 ~~~bash
 VRKANSAGARA_COMPRESS_DEBUG= true
@@ -60,9 +60,10 @@ VRKANSAGARA_COMPRESS_DEBUG= true
 ### Task
 
 - [x] Add analytics before compress and after compress.
-- [x] Migrate code to Laravel package format. 
+- [x] Migrate code to Laravel package format.
 
-### Code Assumption
+### Code assumption
+
 This code is developed with the mind set of each request is filtered by this middleware. So most of the code will not be flexi.
 
 Improvement and suggestion are always welcome.
