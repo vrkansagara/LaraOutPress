@@ -1,4 +1,4 @@
-# LaraOutPress (Laravel Output Pres)
+# LaraOutPress (Laravel Output Press)
 
   This is simply compress your final out of Larvel Application and serve to the browser.
 
@@ -64,6 +64,7 @@ VRKANSAGARA_COMPRESS_DEBUG= true
 
 ### Code assumption
 
-This code is developed with the mind set of each request is filtered by this middleware. So most of the code will not be flexi.
+This code is developed with the mind set of each request is filtered by this middleware.
+So most of the code will not be flexible by nature except configuration.
 
 Improvement and suggestion are always welcome.
