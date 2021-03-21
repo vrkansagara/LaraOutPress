@@ -41,22 +41,25 @@ VRKANSAGARA_COMPRESS_ENABLED=true
 ~~~
 
 ### Display usage on each page.
-
-Set ` $debug = 1; ` in ` AfterMiddleware.php `
+~~~bash
+VRKANSAGARA_COMPRESS_DEBUG= true
+~~~
 
 ### TO Do List
 
-- [x] Compress browser output.
-- [] Combine all CSS
-- [] Combine all JavaScript files.
-- [] Compress using varis algorithms.
-- [] Versioning the compressed file.
-- [] Except route(s),middleware,group,prefix
+- [ ] Compress browser output.
+- [ ] Combine all CSS
+- [ ] Combine all JavaScript files.
+- [ ] Compress using various algorithms.
+- [ ] Versioning the compressed file.
+- [x] Except route(s)
+- [ ] Exclude middleware(s)
+- [ ] Exclude group(s)
 
 ### Task
 
 - [x] Add analytics before compress and after compress.
-- [x] Migrate code to laravel package format. 
+- [x] Migrate code to Laravel package format. 
 
 ### Code Assumption
 This code is developed with the mind set of each request is filtered by this middleware. So most of the code will not be flexi.
