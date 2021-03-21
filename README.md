@@ -1,10 +1,10 @@
 # LaraOutPress (Laravel Output Press)
-This is simply compress your final out of Larvel Application and serve to the browser.
+  This is simply compress your final out of Larvel Application and serve to the browser.
 
 ### How to install
 
 ~~~bash
-	composer require vrkansagara/lara-out-press
+composer require vrkansagara/lara-out-press
 ~~~
 
 ### How to activate this compression middleware in your application
@@ -25,7 +25,7 @@ Enable on single environment `.env`
 
 ~~~bash
 VRKANSAGARA_COMPRESS_ENVIRONMENT="${APP_ENV}" 
-~~~
+~~
 
 Enable on multiple environment `.env`
 
