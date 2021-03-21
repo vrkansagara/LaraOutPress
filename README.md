@@ -11,15 +11,15 @@ composer require vrkansagara/lara-out-press
 
 Add the ServiceProvider to the providers array in `config/app.php`
 
-```php
+~~~php
 Vrkansagara\LaraOutPress\ServiceProvider::class,
-```
+~~~
 
 Copy the package config to your local config with the publish command:
 
-```shell
+~~~bash
 php artisan vendor:publish --provider="Vrkansagara\LaraOutPress\ServiceProvider"
-```
+~~~
 
 Enable on single environment `.env`
 
@@ -41,6 +41,7 @@ VRKANSAGARA_COMPRESS_ENABLED=true
 ~~~
 
 ### Display usage on each page.
+
 ~~~bash
 VRKANSAGARA_COMPRESS_DEBUG= true
 ~~~
