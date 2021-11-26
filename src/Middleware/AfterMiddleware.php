@@ -3,25 +3,26 @@
 namespace Vrkansagara\LaraOutPress\Middleware;
 
 /**
- * @copyright  Copyright (c) 2015-2019 Vallabh Kansagara <vrkansagara@gmail.com>
+ * @copyright  Copyright (c) 2015-2021 Vallabh Kansagara <vrkansagara@gmail.com>
  * @license    https://opensource.org/licenses/BSD-3-Clause New BSD License
  */
 
 
 use Closure;
+use Illuminate\Support\Facades\Request;
 use Vrkansagara\LaraOutPress\LaraOutPress;
 
 class AfterMiddleware
 {
 
+    /** * @var $bufferOldSize int */
     public $bufferOldSize;
 
+    /** * @var $bufferNewSize int */
     public $bufferNewSize;
 
 
-    /**
-     * @var LaraOutPress
-     */
+    /** * @var LaraOutPress */
     protected $laraOutPress;
 
     /**
@@ -46,9 +47,13 @@ class AfterMiddleware
      */
     public function handle($request, Closure $next)
     {
+        if (!$this->isCurrentRouteAllowedToCompress($request)) {
+            return $next($request);
+        }
         if (!$this->laraOutPress->isEnabled()) {
             return $next($request);
         }
+
         $config = $this->laraOutPress->getConfig();
         $isDebug = $config['debug'];
         $targetEnvironment = explode(',', $config['target_environment']);
@@ -66,7 +71,6 @@ class AfterMiddleware
         if (!in_array($appEnvironment, $targetEnvironment)) {
             return $next($request);
         }
-
         $whiteSpaceRules = array(
             '/(\s)+/s' => '\\1',// shorten multiple whitespace sequences
             "#>\s+<#" => ">\n<",  // Strip excess whitespace using new line
@@ -118,7 +122,9 @@ Reduce : $percent%<br>
 EOF;
         }
         $response->setContent($buffer);
+
         ini_set('pcre.recursion_limit', '16777');
+
         ini_set(
             'zlib.output_compression', 4096
         ); // Some browser cant get content type.
@@ -131,11 +137,11 @@ EOF;
      * This method will no longer support.
      *
      * @note Code will be healed even after marked as @deprecated for further reference.
-     * @deprecated
-     *
      * @param $buffer
      *
      * @return null|string|string[] Compressed output
+     * @deprecated
+     *
      */
     public static function compress($buffer)
     {
@@ -235,4 +241,35 @@ EOF;
 
     }
 
+    /**
+     * Is current route allow to compress based on library configuration
+     *
+     * @return bool
+     */
+    public function isCurrentRouteAllowedToCompress(\Illuminate\Http\Request $request)
+    {
+        $config = $this->laraOutPress->getConfig();
+
+        if (!is_array($config['exclude_routes'])) {
+            // If configuration has no route(s) data or is empty then we will not compress any data
+            return false;
+        }
+
+        if ($request->is($config['exclude_routes'])) {
+            return false;
+        }
+
+        foreach ($config['exclude_routes'] as $path) {
+            if ($path !== '/') {
+                $path = trim($path, '/');
+            }
+
+            if ($request->fullUrlIs($path) || $request->is($path)) {
+                return true;
+            }
+        }
+
+
+        return true;
+    }
 }
