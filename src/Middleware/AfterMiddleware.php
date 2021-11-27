@@ -1,12 +1,8 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Vrkansagara\LaraOutPress\Middleware;
-
-/**
- * @copyright  Copyright (c) 2015-2021 Vallabh Kansagara <vrkansagara@gmail.com>
- * @license    https://opensource.org/licenses/BSD-3-Clause New BSD License
- */
-
 
 use Closure;
 use Illuminate\Support\Facades\Request;
@@ -47,10 +43,10 @@ class AfterMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if (!$this->isCurrentRouteAllowedToCompress($request)) {
+        if (! $this->isCurrentRouteAllowedToCompress($request)) {
             return $next($request);
         }
-        if (!$this->laraOutPress->isEnabled()) {
+        if (! $this->laraOutPress->isEnabled()) {
             return $next($request);
         }
 
@@ -68,10 +64,10 @@ class AfterMiddleware
             $this->bufferOldSize = strlen($buffer);
         }
 
-        if (!in_array($appEnvironment, $targetEnvironment)) {
+        if (! in_array($appEnvironment, $targetEnvironment)) {
             return $next($request);
         }
-        $whiteSpaceRules = array(
+        $whiteSpaceRules = [
             '/(\s)+/s' => '\\1',// shorten multiple whitespace sequences
             "#>\s+<#" => ">\n<",  // Strip excess whitespace using new line
             "#\n\s+<#" => "\n<",// strip excess whitespace using new line
@@ -86,15 +82,19 @@ class AfterMiddleware
              * )         # End of lookahead
              * /x',
              */
-            //            '/\s+(?![^<>]*>)/x' => '', //Remove all whitespaces except content between html tags. //MOST DANGEROUS
-        );
-        $commentRules = array(
+
+            //Remove all whitespaces except content between html tags.
+            //MOST DANGEROUS
+            //            '/\s+(?![^<>]*>)/x' => '',
+        ];
+        $commentRules = [
             "/<!--.*?-->/ms" => '',// Remove all html comment.,
-        );
-        $replaceWords = array(
+        ];
+        $replaceWords = [
             //OldWord will be replaced by the NewWord
-            //              '/\bOldWord\b/i' =>'NewWord' // OldWord <-> NewWord DO NOT REMOVE THIS LINE. {REFERENCE LINE}
-        );
+            // OldWord <-> NewWord DO NOT REMOVE THIS LINE. {REFERENCE LINE}
+            //'/\bOldWord\b/i' =>'NewWord'
+        ];
         $allRules = array_merge(
             $replaceWords,
             $commentRules,
@@ -102,7 +102,9 @@ class AfterMiddleware
         );
         $buffer = $this->compressJscript($buffer);
         $buffer = preg_replace(
-            array_keys($allRules), array_values($allRules), $buffer
+            array_keys($allRules),
+            array_values($allRules),
+            $buffer
         );
         $this->bufferNewSize = strlen($buffer);
 
@@ -110,7 +112,8 @@ class AfterMiddleware
             $old = $this->formatSizeUnits($this->bufferOldSize);
             $new = $this->formatSizeUnits($this->bufferNewSize);
             $percent = round(
-                ($this->bufferNewSize / $this->bufferOldSize) * 100, 2
+                ($this->bufferNewSize / $this->bufferOldSize) * 100,
+                2
             );
             $buffer
                 .= <<< EOF
@@ -126,7 +129,8 @@ EOF;
         ini_set('pcre.recursion_limit', '16777');
 
         ini_set(
-            'zlib.output_compression', 4096
+            'zlib.output_compression',
+            4096
         ); // Some browser cant get content type.
         ini_set('zlib.output_compression_level', -1); // Let server decide.
 
@@ -136,9 +140,8 @@ EOF;
     /**
      * This method will no longer support.
      *
-     * @note Code will be healed even after marked as @deprecated for further reference.
+     * @note Code arked as @deprecated but for reference only.
      * @param $buffer
-     *
      * @return null|string|string[] Compressed output
      * @deprecated
      *
@@ -185,7 +188,7 @@ EOF;
     public function formatSizeUnits($size)
     {
         $base = log($size) / log(1024);
-        $suffix = array('', 'KB', 'MB', 'GB', 'TB');
+        $suffix = ['', 'KB', 'MB', 'GB', 'TB'];
         $f_base = floor($base);
 
         return round(pow(1024, $base - floor($base)), 2) . $suffix[$f_base];
@@ -194,7 +197,7 @@ EOF;
     public function compressJscript($buffer)
     {
         // JavaScript compressor by John Elliot <jj5@jj5.net>
-        $replace = array(
+        $replace = [
             '#\'([^\n\']*?)/\*([^\n\']*)\'#' => "'\1/'+\'\'+'*\2'",
             // remove comments from ' strings
             '#\"([^\n\"]*?)/\*([^\n\"]*)\"#' => '"\1/"+\'\'+"*\2"',
@@ -214,9 +217,9 @@ EOF;
             // (important given later replacements)
             '#/([\'"])\+\'\'\+([\'"])\*#' => "/*"
             // restore comments in strings
-        );
+        ];
         $script = preg_replace(array_keys($replace), $replace, $buffer);
-        $replace = array(
+        $replace = [
             "&&\n" => "&&",
             "||\n" => "||",
             "(\n" => "(",
@@ -234,11 +237,10 @@ EOF;
             "\n)" => ")",
             "\n}" => "}",
             "\n\n" => "\n",
-        );
+        ];
         $script = str_replace(array_keys($replace), $replace, $script);
 
         return trim($script);
-
     }
 
     /**
@@ -250,7 +252,7 @@ EOF;
     {
         $config = $this->laraOutPress->getConfig();
 
-        if (!is_array($config['exclude_routes'])) {
+        if (! is_array($config['exclude_routes'])) {
             // If configuration has no route(s) data or is empty then we will not compress any data
             return false;
         }

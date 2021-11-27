@@ -76,7 +76,7 @@ class LaraOutPress
      */
     public function __construct($app = null)
     {
-        if (!$app) {
+        if (! $app) {
             $app = app();   //Fallback when $app is not given
         }
         $this->setApp($app);
@@ -118,10 +118,8 @@ class LaraOutPress
         if ($this->enabled === null) {
             $config = $this->config;
             $configEnabled = value($config['enabled']);
-            $this->enabled = ($configEnabled && !$this->app->runningInConsole()) ? $configEnabled : false;
+            $this->enabled = ($configEnabled && ! $this->app->runningInConsole()) ? $configEnabled : false;
         }
         return $this->enabled;
     }
-
-
 }

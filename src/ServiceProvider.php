@@ -1,15 +1,14 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Vrkansagara\LaraOutPress;
 
-/**
- * @copyright  Copyright (c) 2015-2021 Vallabh Kansagara <vrkansagara@gmail.com>
- * @license    https://opensource.org/licenses/BSD-3-Clause New BSD License
- */
-
-use Vrkansagara\LaraOutPress\Middleware\AfterMiddleware;
 use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Support\ServiceProvider as SupportServiceProvider;
+use Vrkansagara\LaraOutPress\Middleware\AfterMiddleware;
 
-class ServiceProvider extends \Illuminate\Support\ServiceProvider
+class ServiceProvider extends SupportServiceProvider
 {
     /**
      * Indicates if loading of the provider is deferred.
@@ -81,5 +80,4 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $kernel = $this->app[Kernel::class];
         $kernel->pushMiddleware($middleware);
     }
-
 }

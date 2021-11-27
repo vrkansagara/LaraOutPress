@@ -1,0 +1,48 @@
+name: "Test and Deploy"
+
+on:
+  push:
+    branches: [ dev-master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    env:
+      extensions: bcmath, bz2, curl, gd, intl, ldap, mbstring, opcache, readline, sqlite3, tidy, xml, xsl, zip
+      ini-values: memory_limit=-1
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Know Me !
+      run:  lsb_release -a && uname -a && echo $(pwd)
+
+    - name: Validate composer.json and composer.lock
+      run: composer validate --strict
+
+    - name: Cache Composer packages
+      id: composer-cache
+      uses: actions/cache@v2
+      with:
+        path: vendor
+        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-php-
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress --ignore-platform-req=php
+    
+    - name: Copy phpunit and phpcs files
+      run: cp phpcs.xml.dist phpcs.xml && cp phpunit.xml.dist phpunit.xml
+
+    - name: Run ch-check
+      run: composer run-script cs-check
+
+    - name: Run cs-fix
+      run: composer run-script cs-fix
+
+    - name: PHPUnit Test
+      run: composer run-script test
