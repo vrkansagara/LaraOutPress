@@ -1,51 +1,69 @@
 {
-  "name": "vrkansagara/lara-out-press",
-  "description": "This is simply compress your final out of Larvel Application and serve to the browser.",
-  "keywords": [
-    "laravel",
-    "compress"
-  ],
-  "homepage": "https://vrkansagara.in/",
-  "type": "library",
-  "license": "BSD-3-Clause",
-  "authors": [
-    {
-      "name": "Vallabh Kansagara",
-      "email": "vrkansagara@gmail.com",
-      "homepage": "https://vrkansagara.in/"
+    "name": "vrkansagara/lara-out-press",
+    "description": "This is simply compress your final out of Larvel Application and serve to the browser.",
+    "keywords": [
+        "laravel",
+        "compress"
+    ],
+    "homepage": "http://vrkansagara.in",
+    "type": "library",
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Vallabh Kansagara",
+            "email": "vrkansagara@gmail.com",
+            "homepage": "http://vrkansagara.in"
+        }
+    ],
+    "require": {
+        "php": ">=7.0|^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "LaraOutPress\\": "src/"
+        }
+    },
+    "support": {
+        "email": "vrkansagara@gmail.com",
+        "issues": "https://github.com/vrkansagara/LaraOutPress/issues",
+        "source": "https://github.com/vrkansagara/LaraOutPress"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Vrkansagara\\LaraOutPress\\ServiceProvider"
+            ],
+            "aliases": {
+                "LaraOutPress": "Vrkansagara\\LaraOutPress\\Facade"
+            }
+        }
+    },
+    "require-dev": {
+        "laravel/framework": "5.5.x || 8.0.x",
+        "laminas/laminas-coding-standard": "^2.3",
+        "phpunit/phpunit": "^9.5"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump"
+        ],
+        "check": [
+            "@cs-check",
+            "@test"
+        ],
+        "cs-check": "./vendor/bin/phpcs -s",
+        "cs-fix": "./vendor/bin/phpcbf --standard=./phpcs.xml",
+        "test": [
+            "./vendor/bin/phpunit --testdox --colors=always",
+            "echo 'Current head at ' && git rev-parse --verify HEAD"
+        ],
+        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
     }
-  ],
-  "require": {
-    "php": ">=7.0|^8.0"
-  },
-  "autoload": {
-    "psr-4": {
-      "LaraOutPress\\": "src/"
-    }
-  },
-  "support": {
-    "email": "vrkansagara@gmail.com",
-    "issues": "https://github.com/vrkansagara/LaraOutPress/issues",
-    "source": "https://github.com/vrkansagara/LaraOutPress"
-  },
-  "minimum-stability": "dev",
-  "prefer-stable": true,
-  "extra": {
-    "laravel": {
-      "providers": [
-        "Vrkansagara\\LaraOutPress\\ServiceProvider"
-      ],
-      "aliases": {
-        "LaraOutPress": "Vrkansagara\\LaraOutPress\\Facade"
-      }
-    }
-  },
-  "require-dev": {
-    "laravel/framework": "5.5.x || 8.0.x"
-  },
-  "scripts": {
-    "post-autoload-dump": [
-      "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump"
-    ]
-  }
 }
