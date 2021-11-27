@@ -23,6 +23,11 @@
             "LaraOutPress\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "LaraOutPressTest\\": "/tests/"
+        }
+    },
     "support": {
         "email": "vrkansagara@gmail.com",
         "issues": "https://github.com/vrkansagara/LaraOutPress/issues",

@@ -34,6 +34,15 @@ jobs:
 
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress --ignore-platform-req=php
+    
+    - name: Copy phpunit and phpcs files
+      run: cp phpcs.xml.dist phpcs.xml && cp phpunit.xml.dist phpunit.xml
+
+    - name: Run ch-check
+      run: composer run-script cs-check
+
+    - name: Run cs-fix
+      run: composer run-script cs-fix
 
     - name: PHPUnit Test
       run: composer run-script test
