@@ -20,7 +20,7 @@
     },
     "autoload": {
         "psr-4": {
-            "LaraOutPress\\": "src/"
+            "Vrkansagara\\LaraOutPress\\": "src/"
         }
     },
     "autoload-dev": {
