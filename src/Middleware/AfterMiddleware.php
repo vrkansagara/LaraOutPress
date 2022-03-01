@@ -130,9 +130,9 @@ EOF;
 
         ini_set(
             'zlib.output_compression',
-            4096
+            '4096'
         ); // Some browser cant get content type.
-        ini_set('zlib.output_compression_level', -1); // Let server decide.
+        ini_set('zlib.output_compression_level', '-1'); // Let server decide.
 
         return $response;
     }
