@@ -49,6 +49,10 @@ class AfterMiddleware
         if (! $this->laraOutPress->isEnabled()) {
             return $next($request);
         }
+        
+        if ($request->expectsJson()) {
+            return $next($request);
+        }
 
         $config = $this->laraOutPress->getConfig();
         $isDebug = $config['debug'];
