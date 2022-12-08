@@ -137,9 +137,9 @@ class AfterMiddleware
             $old = LaraOutPress::formatSizeUnits($this->bufferOldSize);
             $new = LaraOutPress::formatSizeUnits($this->bufferNewSize);
             $percent = 100 - round(
-                    ($this->bufferNewSize * 100 ) / $this->bufferOldSize ,
-                    2
-                );
+                ($this->bufferNewSize * 100 ) / $this->bufferOldSize,
+                2
+            );
             $buffer
                 .= <<< EOF
 <p style=" 
