@@ -8,9 +8,12 @@ use Closure;
 use Illuminate\Support\Facades\Request;
 use Vrkansagara\LaraOutPress\LaraOutPress;
 
+/**
+ * @copyright  Copyright (c) 2015-2022 Vallabh Kansagara <vrkansagara@gmail.com>
+ * @license    https://opensource.org/licenses/BSD-3-Clause New BSD License
+ */
 class AfterMiddleware
 {
-
     /** * @var $bufferOldSize int */
     public $bufferOldSize;
 
@@ -49,7 +52,7 @@ class AfterMiddleware
         if (! $this->laraOutPress->isEnabled()) {
             return $next($request);
         }
-        
+
         if ($request->expectsJson()) {
             return $next($request);
         }
@@ -113,8 +116,8 @@ class AfterMiddleware
         $this->bufferNewSize = strlen($buffer);
 
         if ($isDebug) {
-            $old = $this->formatSizeUnits($this->bufferOldSize);
-            $new = $this->formatSizeUnits($this->bufferNewSize);
+            $old = LaraOutPress::formatSizeUnits($this->bufferOldSize);
+            $new = LaraOutPress::formatSizeUnits($this->bufferNewSize);
             $percent = round(
                 ($this->bufferNewSize / $this->bufferOldSize) * 100,
                 2
@@ -187,15 +190,6 @@ EOF;
         }
 
         return $new_buffer;
-    }
-
-    public function formatSizeUnits($size)
-    {
-        $base = log($size) / log(1024);
-        $suffix = ['', 'KB', 'MB', 'GB', 'TB'];
-        $f_base = floor($base);
-
-        return round(pow(1024, $base - floor($base)), 2) . $suffix[$f_base];
     }
 
     public function compressJscript($buffer)

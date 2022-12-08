@@ -20,12 +20,15 @@
     },
     "autoload": {
         "psr-4": {
-            "Vrkansagara\\LaraOutPress\\": "src/"
-        }
+            "Vrkansagara\\LaraOutPress\\": "src"
+        },
+        "files": [
+            "src/helper.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
-            "LaraOutPressTest\\": "/tests/"
+            "Vrkansagara\\LaraOutPress\\": "tests"
         }
     },
     "support": {
@@ -36,6 +39,9 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "extra": {
+        "branch-alias": {
+            "dev-master": "master"
+        },
         "laravel": {
             "providers": [
                 "Vrkansagara\\LaraOutPress\\ServiceProvider"
@@ -53,7 +59,10 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     },
     "scripts": {
         "post-autoload-dump": [

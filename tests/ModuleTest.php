@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace LaraOutPressTest;
+namespace Vrkansagara\LaraOutPress;
 
 use PHPUnit\Framework\TestCase;
 

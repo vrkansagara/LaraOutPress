@@ -8,6 +8,10 @@ use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Support\ServiceProvider as SupportServiceProvider;
 use Vrkansagara\LaraOutPress\Middleware\AfterMiddleware;
 
+/**
+ * @copyright  Copyright (c) 2015-2022 Vallabh Kansagara <vrkansagara@gmail.com>
+ * @license    https://opensource.org/licenses/BSD-3-Clause New BSD License
+ */
 class ServiceProvider extends SupportServiceProvider
 {
     /**
@@ -35,8 +39,9 @@ class ServiceProvider extends SupportServiceProvider
      */
     public function boot()
     {
-        $configPath = __DIR__ . '/../config/laraoutpress.php';
-        $this->publishes([$configPath => $this->getConfigPath()], 'config');
+        $this->publishes([
+            __DIR__ . '/../config/laraoutpress.php' => config_path('laraoutpress.php'),
+        ]);
         $this->registerMiddleware(AfterMiddleware::class);
     }
 
