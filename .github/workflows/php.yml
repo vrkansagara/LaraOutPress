@@ -2,16 +2,16 @@ name: "Test and Deploy"
 
 on:
   push:
-    branches: [ dev-master, master ]
+    branches: [ master ]
   pull_request:
-    branches: [ dev-master, master ]
+    branches: [ master ]
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
     env:
-      extensions: bcmath, bz2, curl, gd, intl, ldap, mbstring, opcache, readline, sqlite3, tidy, xml, xsl, zip
+      extensions: bcmath, bz2, curl, gd, intl, ldap, mbstring, opcache, readline, sqlite3, tidy, xml, xsl, zip zlib pcre
       ini-values: memory_limit=-1
 
     steps:
