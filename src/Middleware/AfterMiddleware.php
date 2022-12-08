@@ -142,11 +142,18 @@ class AfterMiddleware
             );
             $buffer
                 .= <<< EOF
-<span>
-Before : $old<br>
-After  : $new <br>
-Reduce : $percent%<br>
-</span>
+<p style=" 
+  font-size: 200%;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+  background: white;
+  color: green;
+  font-weight: bold;
+  text-align: center;
+}
+"><span style="color: red;">&nbsp;Before : $old</span><span style="color: green;">&nbsp;After  : $new </span> <span style="color: blue;">&nbsp;Reduce : $percent%</span> reduce network load on each request for this route.</p>
 EOF;
         }
         $response->setContent($buffer);
