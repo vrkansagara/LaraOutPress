@@ -5,18 +5,20 @@
         "laravel",
         "compress"
     ],
-    "homepage": "http://vrkansagara.in",
+    "homepage": "https://vrkansagara.in",
     "type": "library",
     "license": "BSD-3-Clause",
     "authors": [
         {
             "name": "Vallabh Kansagara",
             "email": "vrkansagara@gmail.com",
-            "homepage": "http://vrkansagara.in"
+            "homepage": "https://vrkansagara.in"
         }
     ],
     "require": {
-        "php": ">=7.0|^8.0"
+        "php": ">=7.0|^8.0",
+        "ext-zlib": "*",
+        "ext-pcre": "*"
     },
     "autoload": {
         "psr-4": {

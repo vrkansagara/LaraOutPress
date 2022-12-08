@@ -48,14 +48,8 @@ VRKANSAGARA_COMPRESS_DEBUG= true
 
 ### TO Do List
 
-- [ ] Compress browser output.
-- [ ] Combine all CSS
-- [ ] Combine all JavaScript files.
-- [ ] Compress using various algorithms.
-- [ ] Versioning the compressed file.
+- [x] Compress browser output.
 - [x] Except route(s)
-- [ ] Exclude middleware(s)
-- [ ] Exclude group(s)
 
 ### Task
 

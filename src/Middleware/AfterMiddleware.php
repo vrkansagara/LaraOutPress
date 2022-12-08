@@ -46,16 +46,33 @@ class AfterMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if (! $this->isCurrentRouteAllowedToCompress($request)) {
-            return $next($request);
-        }
+        # Priority :- 1 Is enable ?
         if (! $this->laraOutPress->isEnabled()) {
             return $next($request);
         }
 
+        # Priority :- 1 Does response expect Json ?
         if ($request->expectsJson()) {
             return $next($request);
         }
+
+        # Priority :- 3 Current route is belong to exclude(s) ?
+        if (! $this->isCurrentRouteAllowedToCompress($request)) {
+            return $next($request);
+        }
+
+        // If priority and module status is enable then lest start processing the request.
+
+        $iniData  = [];
+        $iniData['pcre.recursion_limit'] = ini_get('pcre.recursion_limit');
+        $iniData['zlib.output_compression'] = ini_get('zlib.output_compression');
+        $iniData['zlib.output_compression_level'] = ini_get('zlib.output_compression_level');
+
+        ini_set('pcre.recursion_limit', '16777');
+        // Some browser cant get content type.
+        ini_set('zlib.output_compression', '4096');
+        // Let server decide.
+        ini_set('zlib.output_compression_level', '-1');
 
         $config = $this->laraOutPress->getConfig();
         $isDebug = $config['debug'];
@@ -74,6 +91,7 @@ class AfterMiddleware
         if (! in_array($appEnvironment, $targetEnvironment)) {
             return $next($request);
         }
+
         $whiteSpaceRules = [
             '/(\s)+/s' => '\\1',// shorten multiple whitespace sequences
             "#>\s+<#" => ">\n<",  // Strip excess whitespace using new line
@@ -133,13 +151,9 @@ EOF;
         }
         $response->setContent($buffer);
 
-        ini_set('pcre.recursion_limit', '16777');
-
-        ini_set(
-            'zlib.output_compression',
-            '4096'
-        ); // Some browser cant get content type.
-        ini_set('zlib.output_compression_level', '-1'); // Let server decide.
+        ini_set('pcre.recursion_limit', $iniData['pcre.recursion_limit']);
+        ini_set('zlib.output_compression', $iniData['zlib.output_compression']);
+        ini_set('zlib.output_compression_level', $iniData['zlib.output_compression_level']);
 
         return $response;
     }
@@ -268,7 +282,6 @@ EOF;
                 return true;
             }
         }
-
 
         return true;
     }
