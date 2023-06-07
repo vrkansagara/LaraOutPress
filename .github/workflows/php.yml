@@ -2,9 +2,9 @@ name: "Test and Deploy"
 
 on:
   push:
-    branches: [ master, develop ]
+    branches: [ master, dev-master ]
   pull_request:
-    branches: [ master, develop ]
+    branches: [ master, dev-master ]
 
 jobs:
   build:
