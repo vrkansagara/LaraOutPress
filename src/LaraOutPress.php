@@ -123,16 +123,4 @@ class LaraOutPress
         }
         return $this->enabled;
     }
-
-    /**
-     * Get formatted size string
-     *
-     * @param float $size
-     * @return string
-     */
-    public static function formatSizeUnits($size = 0): string
-    {
-        $base = log($size) / log(1024);
-        return round(pow(1024, $base - floor($base)), 2) . ['', 'KB', 'MB', 'GB', 'TB'][floor($base)];
-    }
 }

@@ -72,5 +72,12 @@ Improvement and suggestion are always welcome.
 I would like take issue and pull request regarding this project and
 love to answer if anything on this. I would be more happy if you have on this.
 
+#### How to setup up development environment for this package
+
+~~~bash
+chmod +x init.sh
+bash init.sh
+~~~
+
 ## Made with :heart: in India
 <img src="Images/India.svg" width="20" height="20">

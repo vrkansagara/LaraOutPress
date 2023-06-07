@@ -21,7 +21,12 @@
             <property name="ignoreBlankLines" value="false"/>
         </properties>
     </rule>
+    <rule ref="PSR1.Files.SideEffects.FoundWithSymbols">
+        <exclude-pattern>public/index.php</exclude-pattern>
+    </rule>
 
     <!-- Paths to check -->
+    <file>public</file>
     <file>src</file>
+    <file>tests</file>
 </ruleset>
