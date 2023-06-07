@@ -15,34 +15,34 @@ jobs:
       ini-values: memory_limit=-1
 
     steps:
-      - uses: actions/checkout@v2
+    - uses: actions/checkout@v2
 
-      - name: Know Me !
-        run: lsb_release -a && uname -a && echo $(pwd)
+    - name: Know Me !
+      run:  lsb_release -a && uname -a && echo $(pwd)
 
-      - name: Validate composer.json and composer.lock
-        run: composer validate --strict
+    - name: Validate composer.json and composer.lock
+      run: composer validate --strict
 
-      - name: Cache Composer packages
-        id: composer-cache
-        uses: actions/cache@v2
-        with:
-          path: vendor
-          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-php-
+    - name: Cache Composer packages
+      id: composer-cache
+      uses: actions/cache@v2
+      with:
+        path: vendor
+        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-php-
 
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --ignore-platform-req=php
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress --ignore-platform-req=php
 
-      - name: Copy phpunit, phpcs, psalm files
-        run: cp phpcs.xml.dist phpcs.xml && cp phpunit.xml.dist phpunit.xml && cp psalm.xml.dist psalm.xml
+    - name: Copy phpunit, phpcs, psalm files
+      run: cp phpcs.xml.dist phpcs.xml && cp phpunit.xml.dist phpunit.xml && cp psalm.xml.dist psalm.xml
 
-      - name: Run ch-check
-        run: composer run-script cs-check
+    - name: Run ch-check
+      run: composer run-script cs-check
 
-      - name: Run cs-fix
-        run: composer run-script cs-fix
+    - name: Run cs-fix
+      run: composer run-script cs-fix
 
-      - name: PHPUnit Test
-        run: composer run-script test
+    - name: PHPUnit Test
+      run: composer run-script test
