@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright  Copyright (c) 2015-2022 Vallabh Kansagara <vrkansagara@gmail.com>
+ * @copyright  Copyright (c) 2015-2023 Vallabh Kansagara <vrkansagara@gmail.com>
  * @license    https://opensource.org/licenses/BSD-3-Clause New BSD License
  */
 
@@ -45,10 +45,10 @@ if (! function_exists('formatSizeUnits')) {
     /**
      * Get formatted size string
      *
-     * @param float $size
+     * @param int | float $size
      * @return string
      */
-    function formatSizeUnits($size = 0): string
+    function formatSizeUnits(int|float $size = 0): string
     {
         $base = log($size) / log(1024);
         return round(pow(1024, $base - floor($base)), 2) . ['', 'KB', 'MB', 'GB', 'TB'][floor($base)];

@@ -7,7 +7,7 @@ namespace Vrkansagara\LaraOutPress;
 use Illuminate\Contracts\Foundation\Application;
 
 /**
- * @copyright  Copyright (c) 2015-2022 Vallabh Kansagara <vrkansagara@gmail.com>
+ * @copyright  Copyright (c) 2015-2023 Vallabh Kansagara <vrkansagara@gmail.com>
  * @license    https://opensource.org/licenses/BSD-3-Clause New BSD License
  */
 class LaraOutPress
@@ -17,32 +17,32 @@ class LaraOutPress
      *
      * @var \Illuminate\Foundation\Application
      */
-    protected $app;
+    protected Application $app;
 
     /**
      * Normalized Laravel Version
      *
      * @var string
      */
-    protected $version;
+    protected string $version;
 
     /**
      * True when enabled, false disabled an null for still unknown
      *
      * @var bool
      */
-    protected $enabled;
+    protected bool $enabled = false;
 
 
     /**
      * @var null
      */
-    protected $config;
+    protected mixed $config;
 
     /**
      * @return string
      */
-    public function getVersion()
+    public function getVersion(): string
     {
         return $this->version;
     }
@@ -50,7 +50,7 @@ class LaraOutPress
     /**
      * @param string $version
      */
-    public function setVersion($version)
+    public function setVersion($version): void
     {
         $this->version = $version;
     }
@@ -58,7 +58,7 @@ class LaraOutPress
     /**
      * @return \Illuminate\Foundation\Application
      */
-    public function getApp()
+    public function getApp(): Application
     {
         return $this->app;
     }
@@ -66,7 +66,7 @@ class LaraOutPress
     /**
      * @param \Illuminate\Foundation\Application $app
      */
-    public function setApp($app)
+    public function setApp($app): void
     {
         $this->app = $app;
     }
@@ -87,17 +87,17 @@ class LaraOutPress
     }
 
     /**
-     * @return null
+     * @return array
      */
-    public function getConfig()
+    public function getConfig(): array
     {
         return $this->config;
     }
 
     /**
-     * @param null $config
+     * @param mixed $config
      */
-    public function setConfig()
+    public function setConfig(): void
     {
         $applicationConfig = $this->app['config'];
         $this->config = $applicationConfig->get('laraoutpress');
@@ -106,7 +106,7 @@ class LaraOutPress
     /**
      * @return bool
      */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return $this->enabled;
     }
@@ -114,12 +114,14 @@ class LaraOutPress
     /**
      * @return bool
      */
-    public function setEnabled()
+    public function setEnabled(): bool
     {
-        if ($this->enabled === null) {
-            $config = $this->config;
-            $configEnabled = value($config['enabled']);
-            $this->enabled = ($configEnabled && ! $this->app->runningInConsole()) ? $configEnabled : false;
+        $config = $this->config;
+        $configEnabled = value($config['enabled']);
+        if ($this->app->runningInConsole()) {
+            $this->enabled = false;
+        } else {
+            $this->enabled = $configEnabled;
         }
         return $this->enabled;
     }

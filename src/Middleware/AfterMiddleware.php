@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Vrkansagara\LaraOutPress\Middleware;
 
 use Closure;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Response;
 use Vrkansagara\LaraOutPress\LaraOutPress;
 
+include_once __DIR__ . '/../helpers.php';
+
 /**
- * @copyright  Copyright (c) 2015-2022 Vallabh Kansagara <vrkansagara@gmail.com>
+ * @copyright  Copyright (c) 2015-2023 Vallabh Kansagara <vrkansagara@gmail.com>
  * @license    https://opensource.org/licenses/BSD-3-Clause New BSD License
  */
 class AfterMiddleware
@@ -42,9 +44,9 @@ class AfterMiddleware
      * @param \Illuminate\Http\Request $request
      * @param \Closure $next
      *
-     * @return mixed
+     * @return Response
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next): Response
     {
         # Priority :- 1 Is enable ?
         if (! $this->laraOutPress->isEnabled()) {

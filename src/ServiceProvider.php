@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace Vrkansagara\LaraOutPress;
 
 use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider as SupportServiceProvider;
 use Vrkansagara\LaraOutPress\Middleware\AfterMiddleware;
 
 /**
- * @copyright  Copyright (c) 2015-2022 Vallabh Kansagara <vrkansagara@gmail.com>
+ * @copyright  Copyright (c) 2015-2023 Vallabh Kansagara <vrkansagara@gmail.com>
  * @license    https://opensource.org/licenses/BSD-3-Clause New BSD License
  */
 class ServiceProvider extends SupportServiceProvider
@@ -19,14 +20,14 @@ class ServiceProvider extends SupportServiceProvider
      *
      * @var bool
      */
-    protected $defer = false;
+    protected bool $defer = false;
 
     /**
      * Register the service provider.
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
         $configPath = __DIR__ . '/../config/laraoutpress.php';
         $this->mergeConfigFrom($configPath, 'laraoutpress');
@@ -37,7 +38,7 @@ class ServiceProvider extends SupportServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         $this->publishes([
             __DIR__ . '/../config/laraoutpress.php' => config_path('laraoutpress.php'),
@@ -50,7 +51,7 @@ class ServiceProvider extends SupportServiceProvider
      *
      * @return Router
      */
-    protected function getRouter()
+    protected function getRouter(): Router
     {
         return $this->app['router'];
     }
@@ -60,7 +61,7 @@ class ServiceProvider extends SupportServiceProvider
      *
      * @return string
      */
-    protected function getConfigPath()
+    protected function getConfigPath(): string
     {
         return config_path('laraoutpress.php');
     }
@@ -70,7 +71,7 @@ class ServiceProvider extends SupportServiceProvider
      *
      * @param  string $configPath
      */
-    protected function publishConfig($configPath)
+    protected function publishConfig($configPath): void
     {
         $this->publishes([$configPath => config_path('laraoutpress.php')], 'config');
     }
@@ -80,7 +81,7 @@ class ServiceProvider extends SupportServiceProvider
      *
      * @param  string $middleware
      */
-    protected function registerMiddleware($middleware)
+    protected function registerMiddleware($middleware): void
     {
         $kernel = $this->app[Kernel::class];
         $kernel->pushMiddleware($middleware);
