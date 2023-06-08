@@ -63,7 +63,7 @@ if (! function_exists('debugMessage')) {
      * @param $new
      * @return string
      */
-    function debugMessage($old,$new): string
+    function debugMessage($old, $new): string
     {
         $percent = 100 - round(($new * 100 ) / $old, 2);
         $old = formatSizeUnits($old);
