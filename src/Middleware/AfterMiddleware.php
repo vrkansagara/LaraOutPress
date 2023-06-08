@@ -136,29 +136,7 @@ class AfterMiddleware
         $this->bufferNewSize = strlen($buffer);
 
         if ($isDebug) {
-            $old = formatSizeUnits($this->bufferOldSize);
-            $new = formatSizeUnits($this->bufferNewSize);
-            $percent = 100 - round(
-                ($this->bufferNewSize * 100 ) / $this->bufferOldSize,
-                2
-            );
-            $buffer
-                .= <<< EOF
-<p style=" 
-  font-size: 200%;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 100;
-  background: white;
-  color: green;
-  font-weight: bold;
-  text-align: center;
-}
-"><span style="color: red;">&nbsp;Before : $old</span>
-<span style="color: green;">&nbsp;After  : $new </span>
-<span style="color: blue;">&nbsp;Reduce : $percent%</span> reduce network load on each request for this route.</p>
-EOF;
+            $buffer .= debugMessage($this->bufferOldSize,$this->bufferNewSize);
         }
         $response->setContent($buffer);
 
