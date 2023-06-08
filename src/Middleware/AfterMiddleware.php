@@ -8,6 +8,7 @@ use Closure;
 use Illuminate\Http\Response;
 use Vrkansagara\LaraOutPress\HtmlCompressor;
 use Vrkansagara\LaraOutPress\LaraOutPress;
+use Vrkansagara\LaraOutPress\PhpConfiguration;
 
 include_once __DIR__ . '/../helpers.php';
 
@@ -65,18 +66,10 @@ class AfterMiddleware
             return $next($request);
         }
 
-        // If priority and module status is enable then lest start processing the request.
+        // If priority and module status is enabled then lest start processing the request.
 
-        $iniData  = [];
-        $iniData['pcre.recursion_limit'] = ini_get('pcre.recursion_limit');
-        $iniData['zlib.output_compression'] = ini_get('zlib.output_compression');
-        $iniData['zlib.output_compression_level'] = ini_get('zlib.output_compression_level');
-
-        ini_set('pcre.recursion_limit', '16777');
-        // Some browser cant get content type.
-        ini_set('zlib.output_compression', '4096');
-        // Let server decide.
-        ini_set('zlib.output_compression_level', '-1');
+        $phpConfiguration = new PhpConfiguration();
+        $iniData = $phpConfiguration->init();
 
         $config = $this->laraOutPress->getConfig();
         $isDebug = $config['debug'];
@@ -105,6 +98,7 @@ class AfterMiddleware
         if ($isDebug) {
             $buffer .= debugMessage($this->bufferOldSize, $this->bufferNewSize);
         }
+
         $response->setContent($buffer);
 
         ini_set('pcre.recursion_limit', $iniData['pcre.recursion_limit']);
