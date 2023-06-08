@@ -38,7 +38,7 @@ jobs:
     - name: Copy phpunit, phpcs, psalm files
       run: cp phpcs.xml.dist phpcs.xml && cp phpunit.xml.dist phpunit.xml && cp psalm.xml.dist psalm.xml
 
-    - name: Run ch-check
+    - name: Run cs-check
       run: composer run-script cs-check
 
     - name: Run cs-fix
