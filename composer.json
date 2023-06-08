@@ -87,6 +87,7 @@
     ],
     "cs-check": "./vendor/bin/phpcs -s",
     "cs-fix": "./vendor/bin/phpcbf --standard=$(pwd)/phpcs.xml",
+    "php-lint": "./bin/php-lint $(pwd)",
     "test": [
       "./vendor/bin/phpunit --testdox --colors=always",
       "echo 'Current head at ' && git rev-parse --verify HEAD"
