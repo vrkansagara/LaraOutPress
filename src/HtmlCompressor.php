@@ -10,7 +10,6 @@ class HtmlCompressor
 {
     public function init(string $content)
     {
-
         $whiteSpaceRules = [
             '/(\s)+/s' => '\\1',// shorten multiple whitespace sequences
             "#>\s+<#" => ">\n<",  // Strip excess whitespace using new line
