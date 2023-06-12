@@ -35,10 +35,13 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress --ignore-platform-req=php
 
+    - name: PHP linting
+      run: composer run-script php-lint
+
     - name: Copy phpunit, phpcs, psalm files
       run: cp phpcs.xml.dist phpcs.xml && cp phpunit.xml.dist phpunit.xml && cp psalm.xml.dist psalm.xml
 
-    - name: Run ch-check
+    - name: Run cs-check
       run: composer run-script cs-check
 
     - name: Run cs-fix

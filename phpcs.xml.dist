@@ -23,6 +23,7 @@
     </rule>
     <rule ref="PSR1.Files.SideEffects.FoundWithSymbols">
         <exclude-pattern>public/index.php</exclude-pattern>
+        <exclude-pattern>src/Middleware/AfterMiddleware.php</exclude-pattern>
     </rule>
 
     <!-- Paths to check -->

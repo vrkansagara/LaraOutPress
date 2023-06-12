@@ -21,7 +21,7 @@
     "source": "https://github.com/vrkansagara/LaraOutPress"
   },
   "require": {
-    "php": "~8.0.0 || ~8.1.0 || ~8.2.0",
+    "php": "~8.2.0",
     "ext-zlib": "*",
     "ext-pcre": "*"
   },
@@ -35,15 +35,15 @@
   },
   "autoload": {
     "psr-4": {
-      "Vrkansagara\\LaraOutPress\\": "src/"
+      "Vrkansagara\\LaraOutPress\\": "src"
     },
     "files": [
-      "src/Helpers/helper.php"
+      "src/helpers.php"
     ]
   },
   "autoload-dev": {
     "psr-4": {
-      "Vrkansagara\\LaraOutPress\\": "tests/"
+      "Vrkansagara\\LaraOutPress\\Tests\\": "tests"
     }
   },
   "minimum-stability": "dev",
@@ -87,10 +87,12 @@
     ],
     "cs-check": "./vendor/bin/phpcs -s",
     "cs-fix": "./vendor/bin/phpcbf --standard=$(pwd)/phpcs.xml",
+    "php-lint": "./bin/php-lint $(pwd)",
     "test": [
       "./vendor/bin/phpunit --testdox --colors=always",
       "echo 'Current head at ' && git rev-parse --verify HEAD"
     ],
-    "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
+    "test-coverage": "phpunit --colors=always --coverage-clover clover.xml",
+    "test-coverage-html": "vendor/bin/phpunit --coverage-html coverage"
   }
 }

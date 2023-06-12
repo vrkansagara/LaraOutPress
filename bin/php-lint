@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+find "$1" -type f \
+    -path "$(pwd)/vendor/*" -prune -o \
+    -wholename "$(pwd)/*.php" -print0 |  \
+    xargs -0 -n1 -P4 php -l -n -d error_reporting="E_ALL" | \
+    (! grep -v "No syntax errors detected" )
