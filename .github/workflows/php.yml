@@ -15,7 +15,7 @@ jobs:
       ini-values: memory_limit=-1
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v3
 
     - name: Know Me !
       run:  lsb_release -a && uname -a && echo $(pwd) && php -v && php -m
@@ -25,7 +25,7 @@ jobs:
 
     - name: Cache Composer packages
       id: composer-cache
-      uses: actions/cache@v4
+      uses: actions/cache@v2
       with:
         path: vendor
         key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
