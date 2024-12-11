@@ -1,3 +1,4 @@
+#  https://github.com/marketplace/actions/setup-php-action
 name: "Test and Deploy"
 
 on:
@@ -16,7 +17,11 @@ jobs:
 
     steps:
       #`uses' attribute must be a path, a Docker image, or owner/repo@ref
-      - uses: actions/checkout@v2
+    - name: Setup PHP with PECL extension
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        extensions: zlib,pcre,opcache,imagick, swoole
 
     - name: Know Me !
       run:  lsb_release -a && uname -a && echo $(pwd) && php -v && php -m
