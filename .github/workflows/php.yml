@@ -15,7 +15,7 @@ jobs:
       ini-values: memory_limit=-1
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
 
     - name: Know Me !
       run:  lsb_release -a && uname -a && echo $(pwd) && php -v && php -m
