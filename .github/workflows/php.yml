@@ -18,7 +18,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Know Me !
-      run:  lsb_release -a && uname -a && echo $(pwd)
+      run:  lsb_release -a && uname -a && echo $(pwd) && php -v && php -m
 
     - name: Validate composer.json and composer.lock
       run: composer validate --strict
