@@ -16,7 +16,7 @@
         }
     ],
     "require": {
-        "php": ">=7.0|^8.0",
+        "php": ">=7.0|^8.0|^8.3|^8.4",
         "ext-zlib": "*",
         "ext-pcre": "*"
     },
@@ -30,7 +30,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Vrkansagara\\LaraOutPress\\": "tests"
+            "Vrkansagara\\LaraOutPressTest\\": "tests"
         }
     },
     "support": {
@@ -51,16 +51,17 @@
         }
     },
     "require-dev": {
-        "laravel/framework": "5.5.x || 8.0.x",
+        "laravel/framework": "5.5.x || 8.0.x || ^10.00 || ^11.31",
         "laminas/laminas-coding-standard": "^2.3",
-        "phpunit/phpunit": "^9.5"
+        "phpunit/phpunit": "^11.5"
     },
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "kylekatarnls/update-helper": false
         }
     },
     "scripts": {
@@ -76,6 +77,9 @@
         "test": [
             "./vendor/bin/phpunit --testdox --colors=always",
             "echo 'Current head at ' && git rev-parse --verify HEAD"
+        ],
+        "test-config-migrate": [
+            "./vendor/bin/phpunit --migrate-configuration"
         ],
         "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
     }

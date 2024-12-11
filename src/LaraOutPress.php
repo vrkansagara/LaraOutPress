@@ -17,14 +17,14 @@ class LaraOutPress
      *
      * @var \Illuminate\Foundation\Application
      */
-    protected $app;
+    protected Application $app;
 
     /**
      * Normalized Laravel Version
      *
      * @var string
      */
-    protected $version;
+    protected string $version;
 
     /**
      * True when enabled, false disabled an null for still unknown
@@ -42,7 +42,7 @@ class LaraOutPress
     /**
      * @return string
      */
-    public function getVersion()
+    public function getVersion(): string
     {
         return $this->version;
     }
@@ -50,7 +50,7 @@ class LaraOutPress
     /**
      * @param string $version
      */
-    public function setVersion($version)
+    public function setVersion($version): void
     {
         $this->version = $version;
     }
@@ -58,7 +58,7 @@ class LaraOutPress
     /**
      * @return \Illuminate\Foundation\Application
      */
-    public function getApp()
+    public function getApp(): Application
     {
         return $this->app;
     }
@@ -66,7 +66,7 @@ class LaraOutPress
     /**
      * @param \Illuminate\Foundation\Application $app
      */
-    public function setApp($app)
+    public function setApp($app): void
     {
         $this->app = $app;
     }
@@ -106,7 +106,7 @@ class LaraOutPress
     /**
      * @return bool
      */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return $this->enabled;
     }
@@ -114,7 +114,7 @@ class LaraOutPress
     /**
      * @return bool
      */
-    public function setEnabled()
+    public function setEnabled(): bool
     {
         if ($this->enabled === null) {
             $config = $this->config;
