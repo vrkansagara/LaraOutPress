@@ -9,14 +9,14 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     env:
       extensions: bcmath, bz2, curl, gd, intl, ldap, mbstring, opcache, readline, sqlite3, tidy, xml, xsl, zip zlib pcre
       ini-values: memory_limit=-1
 
     steps:
       #`uses' attribute must be a path, a Docker image, or owner/repo@ref
-      - uses: actions/checkout@latest
+      - uses: actions/checkout@v2
 
     - name: Know Me !
       run:  lsb_release -a && uname -a && echo $(pwd) && php -v && php -m
