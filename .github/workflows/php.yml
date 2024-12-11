@@ -1,4 +1,5 @@
 #  https://github.com/marketplace/actions/setup-php-action
+#`uses' attribute must be a path, a Docker image, or owner/repo@ref
 name: "Test and Deploy"
 
 on:
@@ -17,7 +18,6 @@ jobs:
       ini-values: memory_limit=-1
 
     steps:
-      #`uses' attribute must be a path, a Docker image, or owner/repo@ref
     - name: Setup PHP with PECL extension
       uses: shivammathur/setup-php@v2
       with:
