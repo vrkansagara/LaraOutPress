@@ -18,6 +18,9 @@ jobs:
       ini-values: memory_limit=-1
 
     steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
     - name: Setup PHP with PECL extension
       uses: shivammathur/setup-php@v2
       with:
@@ -29,7 +32,7 @@ jobs:
 
     - name: Cache Composer packages
       id: composer-cache
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: vendor
         key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
