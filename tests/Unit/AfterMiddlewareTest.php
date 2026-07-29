@@ -286,4 +286,34 @@ class AfterMiddlewareTest extends TestCase
 
         $this->assertStringNotContainsString('/* comment */', $result);
     }
+
+    public function testBinaryFileResponseIsPassedThroughUntouched()
+    {
+        putenv('APP_ENV=testing');
+
+        $laraOutPress = $this->makeLaraOutPress(true, $this->baseConfig([
+            'target_environment' => 'testing',
+        ]));
+        $middleware = new AfterMiddleware($laraOutPress);
+
+        $request = Request::create('/export.xlsx', 'GET');
+
+        $tmpFile = tempnam(sys_get_temp_dir(), 'laraoutpress-test');
+        file_put_contents($tmpFile, 'binary excel payload');
+        $response = new \Symfony\Component\HttpFoundation\BinaryFileResponse($tmpFile);
+
+        $next = function ($req) use ($response) {
+            return $response;
+        };
+
+        // BinaryFileResponse::getContent() returns false and setContent()
+        // throws; the middleware must detect this and return the response
+        // untouched instead of crashing (see GitHub issue #40).
+        $result = $middleware->handle($request, $next);
+
+        $this->assertSame($response, $result);
+
+        unlink($tmpFile);
+        putenv('APP_ENV');
+    }
 }

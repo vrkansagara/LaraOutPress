@@ -127,7 +127,19 @@ class AfterMiddleware
         /** @var Response $response */
         $response = $next($request);
 
-        $buffer = (string) $response->getContent();
+        $rawContent = $response->getContent();
+
+        // getContent() returns false for responses that don't buffer their
+        // body in memory (e.g. BinaryFileResponse used by file/Excel
+        // downloads). Those responses also throw on setContent(), so they
+        // must never enter the compression pipeline at all.
+        if ($rawContent === false) {
+            $this->restoreIniOverrides($iniOverrides);
+
+            return $response;
+        }
+
+        $buffer = $rawContent;
         $bufferOldSize = strlen($buffer);
 
         if ($isDebug) {
