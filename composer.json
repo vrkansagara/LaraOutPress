@@ -51,7 +51,7 @@
         }
     },
     "require-dev": {
-        "laravel/framework": "5.5.x || 8.0.x || ^10.00 || ^11.31 || ^12.61 || ^13.12",
+        "laravel/framework": "5.5.x || 8.0.x || ^10.00 || ^11.31 || ^12.61",
         "laminas/laminas-coding-standard": "^2.3",
         "phpunit/phpunit": "^11.5"
     },
@@ -62,6 +62,9 @@
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "kylekatarnls/update-helper": false
+        },
+        "platform": {
+            "php": "8.2.0"
         }
     },
     "scripts": {
