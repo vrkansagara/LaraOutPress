@@ -118,8 +118,8 @@ class LaraOutPress
     {
         if ($this->enabled === null) {
             $config = $this->config;
-            $configEnabled = value($config['enabled']);
-            $this->enabled = ($configEnabled && ! $this->app->runningInConsole()) ? $configEnabled : false;
+            $configEnabled = value($config['enabled']) === true;
+            $this->enabled = $configEnabled && ! $this->app->runningInConsole();
         }
         return $this->enabled;
     }
