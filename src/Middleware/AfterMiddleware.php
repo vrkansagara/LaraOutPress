@@ -20,6 +20,9 @@ class AfterMiddleware
     /** * @var $bufferNewSize int */
     public $bufferNewSize;
 
+    /** * @var $debug int */
+    public $debug;
+
 
     /** * @var LaraOutPress */
     protected $laraOutPress;
@@ -89,7 +92,11 @@ class AfterMiddleware
         }
 
         if (! in_array($appEnvironment, $targetEnvironment)) {
-            return $next($request);
+            ini_set('pcre.recursion_limit', $iniData['pcre.recursion_limit']);
+            ini_set('zlib.output_compression', $iniData['zlib.output_compression']);
+            ini_set('zlib.output_compression_level', $iniData['zlib.output_compression_level']);
+
+            return $response;
         }
 
         $whiteSpaceRules = [
@@ -136,10 +143,10 @@ class AfterMiddleware
         if ($isDebug) {
             $old = LaraOutPress::formatSizeUnits($this->bufferOldSize);
             $new = LaraOutPress::formatSizeUnits($this->bufferNewSize);
-            $percent = 100 - round(
+            $percent = $this->bufferOldSize > 0 ? 100 - round(
                 ($this->bufferNewSize * 100 ) / $this->bufferOldSize,
                 2
-            );
+            ) : 0;
             $buffer
                 .= <<< EOF
 <p style=" 
@@ -280,16 +287,6 @@ EOF;
 
         if ($request->is($config['exclude_routes'])) {
             return false;
-        }
-
-        foreach ($config['exclude_routes'] as $path) {
-            if ($path !== '/') {
-                $path = trim($path, '/');
-            }
-
-            if ($request->fullUrlIs($path) || $request->is($path)) {
-                return true;
-            }
         }
 
         return true;

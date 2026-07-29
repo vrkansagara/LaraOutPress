@@ -51,7 +51,7 @@
         }
     },
     "require-dev": {
-        "laravel/framework": "5.5.x || 8.0.x || ^10.00 || ^11.31",
+        "laravel/framework": "5.5.x || 8.0.x || ^10.00 || ^11.31 || ^12.61 || ^13.12",
         "laminas/laminas-coding-standard": "^2.3",
         "phpunit/phpunit": "^11.5"
     },

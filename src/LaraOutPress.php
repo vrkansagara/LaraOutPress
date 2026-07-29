@@ -132,7 +132,10 @@ class LaraOutPress
      */
     public static function formatSizeUnits($size = 0): string
     {
+        if ($size <= 0) {
+            return '0B';
+        }
         $base = log($size) / log(1024);
-        return round(pow(1024, $base - floor($base)), 2) . ['', 'KB', 'MB', 'GB', 'TB'][floor($base)];
+        return round(pow(1024, $base - floor($base)), 2) . ['B', 'KB', 'MB', 'GB', 'TB'][(int) floor($base)];
     }
 }
