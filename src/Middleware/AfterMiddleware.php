@@ -139,6 +139,18 @@ class AfterMiddleware
             return $response;
         }
 
+        // Only text/HTML responses should ever reach the compression rules
+        // below, which assume markup. Binary payloads served as a plain
+        // string body — a streamed PDF from DomPDF, a generated image, a zip
+        // — share the same in-memory Response class as an HTML page, but
+        // running whitespace/comment regexes over their raw bytes corrupts
+        // them (e.g. a DomPDF stream() response renders blank afterward).
+        if (! $this->isCompressibleContentType($response)) {
+            $this->restoreIniOverrides($iniOverrides);
+
+            return $response;
+        }
+
         $buffer = $rawContent;
         $bufferOldSize = strlen($buffer);
 
@@ -194,6 +206,23 @@ class AfterMiddleware
         }
 
         return $this->isCurrentRouteAllowedToCompress($request);
+    }
+
+    /**
+     * Whether the response's Content-Type is markup this middleware is safe
+     * to run regex-based compression over. Anything else — PDFs, images,
+     * archives, plain binary streams — must be left untouched, even though
+     * it shares the same Response class and getContent() returns a real
+     * string for it.
+     *
+     * @param Response $response
+     * @return bool
+     */
+    protected function isCompressibleContentType($response): bool
+    {
+        $contentType = $response->headers->get('Content-Type', 'text/html');
+
+        return stripos($contentType, 'html') !== false;
     }
 
     /**

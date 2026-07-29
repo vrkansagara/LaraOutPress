@@ -386,4 +386,35 @@ class AfterMiddlewareTest extends TestCase
         $this->assertLessThan(strlen($original), strlen($result->getContent()));
         $this->assertFalse($result->headers->has('Content-Length'));
     }
+
+    public function testNonHtmlResponseIsPassedThroughUntouched()
+    {
+        putenv('APP_ENV=testing');
+
+        $laraOutPress = $this->makeLaraOutPress(true, $this->baseConfig([
+            'target_environment' => 'testing',
+        ]));
+        $middleware = new AfterMiddleware($laraOutPress);
+
+        $request = Request::create('/invoice.pdf', 'GET');
+
+        // Reproduces GitHub issue #35: barryvdh/laravel-dompdf's stream()
+        // returns a plain Response (not JSON, not a BinaryFileResponse) whose
+        // body is raw PDF binary with Content-Type: application/pdf. Running
+        // HTML whitespace/comment regexes over PDF bytes corrupts the
+        // byte-offset-dependent xref table, so the file renders blank.
+        $pdfBytes = "%PDF-1.4\n1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n"
+            . "2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n"
+            . "3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] >>\nendobj\n"
+            . "xref\n0 4\n0000000000 65535 f \ntrailer\n<< /Size 4 /Root 1 0 R >>\nstartxref\n178\n%%EOF";
+        $response = new Response($pdfBytes, 200, ['Content-Type' => 'application/pdf']);
+
+        $next = function ($req) use ($response) {
+            return $response;
+        };
+
+        $result = $middleware->handle($request, $next);
+
+        $this->assertSame($pdfBytes, $result->getContent());
+    }
 }
