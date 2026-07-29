@@ -163,6 +163,14 @@ class AfterMiddleware
 
         $response->setContent($buffer);
 
+        // setContent() does not touch the Content-Length header. If anything
+        // upstream (the app, a debug toolbar, a proxy) already set it based
+        // on the pre-compression body, leaving it stale here can make the
+        // browser/webserver truncate the response at the old byte count —
+        // right around where trailing widgets (e.g. a debug toolbar injected
+        // just before </body>) live. Let the server recompute it instead.
+        $response->headers->remove('Content-Length');
+
         $this->restoreIniOverrides($iniOverrides);
 
         return $response;
@@ -226,14 +234,34 @@ class AfterMiddleware
     }
 
     /**
+     * Pattern matching a full <script>...</script> block, capturing its
+     * inner content for isolated JS minification.
+     *
+     * @var string
+     */
+    private const SCRIPT_BLOCK_PATTERN = '#(<script\b[^>]*>)(.*?)(</script>)#is';
+
+    /**
      * Run the HTML/JS compression pipeline over a response buffer.
+     *
+     * <script> contents are minified in isolation and never exposed to the
+     * HTML comment/whitespace rules below: a literal "-->" or "//" inside
+     * script data (e.g. a debug toolbar dumping a query string or stack
+     * trace) would otherwise be mistaken for the end of an HTML comment,
+     * silently deleting real markup that follows it.
      *
      * @param string $buffer
      * @return string
      */
     protected function compressBuffer(string $buffer): string
     {
-        $buffer = $this->compressJscript($buffer);
+        $buffer = (string) preg_replace_callback(
+            self::SCRIPT_BLOCK_PATTERN,
+            function (array $matches): string {
+                return $matches[1] . $this->compressJscript($matches[2]) . $matches[3];
+            },
+            $buffer
+        );
 
         $allRules = self::COMMENT_RULES + self::WHITESPACE_RULES;
 

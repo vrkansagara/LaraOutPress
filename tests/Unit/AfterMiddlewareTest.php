@@ -316,4 +316,74 @@ class AfterMiddlewareTest extends TestCase
         unlink($tmpFile);
         putenv('APP_ENV');
     }
+
+    public function testScriptContentWithLiteralCommentCloserDoesNotCorruptSurroundingHtml()
+    {
+        putenv('APP_ENV=testing');
+
+        $laraOutPress = $this->makeLaraOutPress(true, $this->baseConfig([
+            'target_environment' => 'testing',
+        ]));
+        $middleware = new AfterMiddleware($laraOutPress);
+
+        $request = Request::create('/home', 'GET');
+
+        // Guards against a real (if narrow) corruption risk: a <script> block
+        // whose JSON payload legitimately contains a literal "-->" (e.g. a
+        // debug toolbar dumping collected SQL, request data, or a stack
+        // trace). The non-greedy HTML comment regex must not treat that
+        // embedded "-->" as an earlier comment's real closing marker, which
+        // would delete everything in between, including the script tag
+        // itself.
+        $original = '<html><body>'
+            . '<p>Page content</p>'
+            . '<!-- a real comment -->'
+            . '<div id="widget"><script>var x = {"note": "weird --> data"};</script></div>'
+            . '</body></html>';
+        $response = new Response($original);
+
+        $next = function ($req) use ($response) {
+            return $response;
+        };
+
+        $result = $middleware->handle($request, $next);
+
+        $this->assertStringContainsString('Page content', $result->getContent());
+        $this->assertStringContainsString('id="widget"', $result->getContent());
+        $this->assertStringContainsString('<script>', $result->getContent());
+        $this->assertStringNotContainsString('a real comment', $result->getContent());
+        putenv('APP_ENV');
+    }
+
+    public function testStaleContentLengthHeaderIsRemovedAfterCompression()
+    {
+        putenv('APP_ENV=testing');
+
+        $laraOutPress = $this->makeLaraOutPress(true, $this->baseConfig([
+            'target_environment' => 'testing',
+        ]));
+        $middleware = new AfterMiddleware($laraOutPress);
+
+        $request = Request::create('/home', 'GET');
+
+        // Reproduces GitHub issue #37: a debug toolbar (e.g. barryvdh/laravel-debugbar)
+        // sets Content-Length based on the response it rendered, before this
+        // middleware shrinks the body further via whitespace/comment
+        // stripping. setContent() does not touch Content-Length, so a stale,
+        // larger value left in place tells the browser/webserver the body is
+        // longer than it actually is — which can truncate the response right
+        // around trailing content like a toolbar injected before </body>.
+        $original = "<html>\n  <body>\n    <p>content</p>\n  </body>\n</html>";
+        $response = new Response($original);
+        $response->headers->set('Content-Length', (string) strlen($original));
+
+        $next = function ($req) use ($response) {
+            return $response;
+        };
+
+        $result = $middleware->handle($request, $next);
+
+        $this->assertLessThan(strlen($original), strlen($result->getContent()));
+        $this->assertFalse($result->headers->has('Content-Length'));
+    }
 }
