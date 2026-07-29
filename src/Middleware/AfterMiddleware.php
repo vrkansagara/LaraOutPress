@@ -79,8 +79,8 @@ class AfterMiddleware
 
         $config = $this->laraOutPress->getConfig();
         $isDebug = $config['debug'];
-        $targetEnvironment = explode(',', $config['target_environment']);
         $appEnvironment = getenv('APP_ENV');
+        $targetEnvironment = $this->resolveTargetEnvironment($config['target_environment'], $appEnvironment);
 
         $response = $next($request);
 
@@ -290,5 +290,26 @@ EOF;
         }
 
         return true;
+    }
+
+    /**
+     * Resolve the configured target_environment list, falling back to the
+     * current app environment when the config is empty or contains an
+     * unresolved placeholder (e.g. a literal "${APP_ENV}" from a .env file,
+     * which dotenv does not expand).
+     *
+     * @param string|null $configuredTargetEnvironment
+     * @param string|false $appEnvironment
+     * @return array<int, string>
+     */
+    protected function resolveTargetEnvironment($configuredTargetEnvironment, $appEnvironment)
+    {
+        $configuredTargetEnvironment = trim((string) $configuredTargetEnvironment);
+
+        if ($configuredTargetEnvironment === '' || str_contains($configuredTargetEnvironment, '${')) {
+            return [$appEnvironment];
+        }
+
+        return explode(',', $configuredTargetEnvironment);
     }
 }

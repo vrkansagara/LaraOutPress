@@ -83,6 +83,54 @@ class AfterMiddlewareTest extends TestCase
         putenv('APP_ENV');
     }
 
+    public function testUnresolvedEnvPlaceholderFallsBackToCurrentEnvironment()
+    {
+        putenv('APP_ENV=local');
+
+        $laraOutPress = $this->makeLaraOutPress(true, $this->baseConfig([
+            'target_environment' => '${APP_ENV}',
+        ]));
+        $middleware = new AfterMiddleware($laraOutPress);
+
+        $request = Request::create('/home', 'GET');
+        $original = "<html>\n  <body>\n    hi   there\n  </body>\n</html>";
+        $response = new Response($original);
+
+        $next = function ($req) use ($response) {
+            return $response;
+        };
+
+        $result = $middleware->handle($request, $next);
+
+        $this->assertNotSame($original, $result->getContent());
+        $this->assertLessThan(strlen($original), strlen($result->getContent()));
+        putenv('APP_ENV');
+    }
+
+    public function testEmptyTargetEnvironmentFallsBackToCurrentEnvironment()
+    {
+        putenv('APP_ENV=local');
+
+        $laraOutPress = $this->makeLaraOutPress(true, $this->baseConfig([
+            'target_environment' => '',
+        ]));
+        $middleware = new AfterMiddleware($laraOutPress);
+
+        $request = Request::create('/home', 'GET');
+        $original = "<html>\n  <body>\n    hi   there\n  </body>\n</html>";
+        $response = new Response($original);
+
+        $next = function ($req) use ($response) {
+            return $response;
+        };
+
+        $result = $middleware->handle($request, $next);
+
+        $this->assertNotSame($original, $result->getContent());
+        $this->assertLessThan(strlen($original), strlen($result->getContent()));
+        putenv('APP_ENV');
+    }
+
     public function testDisabledModuleSkipsProcessing()
     {
         $laraOutPress = $this->makeLaraOutPress(false, $this->baseConfig());
